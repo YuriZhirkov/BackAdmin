@@ -28,7 +28,7 @@
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
             <img
-              src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3266090804,66355162&fm=26&gp=0.jpg"
+              :src="headUrl"
               class="user-avatar"
             >
             {{username }}<i class="el-icon-caret-bottom"/>
@@ -64,7 +64,9 @@ export default {
       fullscreen: false,
       name: "linxin",
       message: 2,
-      username: "zyh"
+      username: "zzg",
+      headUrl:""
+
     };
   },
   computed: {
@@ -79,13 +81,29 @@ export default {
   },
   created(){
     let that=this;
-    //that.getInfo();
+    that.getInfo();
   },
   methods: {
     getInfo(){
        let that=this;
        let params={};
         params.userId = this.$store.state.userId;
+        getUserInfo(params).then(res => {
+              
+              if(res.errCode==200){
+                let userInfo = res.data;
+                that.username = userInfo.userName;
+                that.headUrl = userInfo.headUrl;
+              } 
+              else{
+                that.$message('error',res.errMsg);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message("error", err.errMsg);
+            });
+
 
     },
     toggleClick() {

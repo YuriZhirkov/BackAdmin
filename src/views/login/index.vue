@@ -174,14 +174,14 @@ export default {
                 that.$router.push({
                   path: "/home"
                 });
-               // that.$store.commit("COMMIT_USERID",res.data);
+                console.log(userId,res.data);
+               that.$store.commit("COMMIT_USERID",res.data);
               } 
               else{
                 that.$message('error',res.errMsg);
               }
             })
             .catch(err => {
-              console.log(err);
               this.$message("error", err.errMsg);
             });
         } else {
