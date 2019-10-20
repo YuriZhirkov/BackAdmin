@@ -14,7 +14,7 @@
           </el-tooltip>
         </div>
         <!-- 多语言 -->
-        <select-lang></select-lang>
+        <!-- <select-lang></select-lang> -->
         <!-- 消息中心 -->
         <div class="btn-bell">
           <el-tooltip effect="dark" :content="$t('header.message')" placement="bottom">
@@ -51,6 +51,7 @@
 import showAside from "./showAside";
 import selectLang from './selectLang'
 import breadcrumb from './Breadcrumb'
+import { getUserInfo } from "@api";
 export default {
   // name:'header',
   components: {
@@ -76,7 +77,17 @@ export default {
       }
     }
   },
+  created(){
+    let that=this;
+    //that.getInfo();
+  },
   methods: {
+    getInfo(){
+       let that=this;
+       let params={};
+        params.userId = this.$store.state.userId;
+
+    },
     toggleClick() {
       this.isCollapse = !this.isCollapse;
     },

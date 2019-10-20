@@ -99,7 +99,7 @@ vue-cli 3.0x与vue-cli 2.0x最主要的区别是项目结构目录精简化，�
  首先配置开发环境，在项目根目录下新建一个文件`.env`文件。
  ```javascript
     NODE_ENV="development"              //开发环境
-    BASE_URL="http://localhost:3000/"   //开发环境接口地址
+    BASE_URL="http://127.0.0.1:8852"   //开发环境接口地址
  ```
  接下来我们配置线上环境，同样在项目根目录新建一个文件`.env.prod`这就表明是生产环境。
  ```javascript

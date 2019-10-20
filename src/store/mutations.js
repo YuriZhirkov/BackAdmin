@@ -22,6 +22,9 @@ const mutations = {
     },
     SET_BREAD(state,breadList){
         state.breadList=breadList
-    }
+    },
+    // COMMIT_USERID(state,userId){
+    //     state.userId=userId
+    // }
 }
 export default mutations
