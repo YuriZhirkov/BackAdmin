@@ -13,8 +13,12 @@ export const  upload=(params)=>get('/api/get/upload',params)
 export const  getPhoneValidateCode=(params)=>get('/user/baseInfo/getPhoneValidateCode',params).then(res=>res.data);
 
 //获取用户信息
-export const  getUserInfo=(params)=>post('/user/baseInfo/moreInfo',params).then(res=>res.data);
+export const  getUserInfo=(params)=>get('/back/user/getUserInfo',params).then(res=>res.data);
 
+
+// 统计用户数量和在线的用户
+
+export const  userStatistics=(params)=>get('/back/user/statistics').then(res=>res.data);
 
 // export const 
 

@@ -92,7 +92,7 @@ export default {
               
               if(res.errCode==200){
                 let userInfo = res.data;
-                that.username = userInfo.userName;
+                that.username = userInfo.nickName;
                 that.headUrl = userInfo.headUrl;
               } 
               else{
@@ -100,7 +100,6 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err);
               this.$message("error", err.errMsg);
             });
 

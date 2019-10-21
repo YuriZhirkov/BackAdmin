@@ -167,15 +167,13 @@ export default {
             params.role = that.userBackRegister.role;
             
           }
-          
           register(params).then(res => {
-              
+               that.$store.commit("COMMIT_USERID",res.data);
               if(res.errCode==200){
                 that.$router.push({
                   path: "/home"
                 });
-                console.log(userId,res.data);
-               that.$store.commit("COMMIT_USERID",res.data);
+
               } 
               else{
                 that.$message('error',res.errMsg);
