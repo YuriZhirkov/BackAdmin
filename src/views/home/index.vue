@@ -81,33 +81,33 @@
     style="width: 100%">
     <el-table-column
       fixed
-      prop="date"
-      label="日期"
+      prop="userId"
+      label="id"
       width="150">
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="姓名"
+      prop="userNum"
+      label="编号"
       width="120">
     </el-table-column>
     <el-table-column
-      prop="province"
-      label="省份"
+      prop="nickName"
+      label="昵称"
       width="120">
     </el-table-column>
     <el-table-column
-      prop="city"
-      label="市区"
+      prop="area"
+      label="居住地"
       width="120">
     </el-table-column>
     <el-table-column
-      prop="address"
-      label="地址"
+      prop="age"
+      label="年纪"
       width="300">
     </el-table-column>
     <el-table-column
-      prop="zip"
-      label="邮编"
+      prop="salary"
+      label="月薪"
       width="120">
     </el-table-column>
     <el-table-column
@@ -121,10 +121,14 @@
     </el-table-column>
   </el-table>
     </el-row>
+    <el-row :gutter="40" class="userListPagination">
+       <el-pagination background layout="prev, pager, next" :total="1000">
+       </el-pagination>
+    </el-row>
   </div>
 </template>
 <script>
-import { userStatistics } from "@api";
+import { userStatistics,baseInfoZXing } from "@api";
 export default {
   name: "home",
   data() {
@@ -132,51 +136,22 @@ export default {
       userNum:0,
       userNumOnLine:0,
       userNumMember:0,
-       tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1517 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1519 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
-        }]
+       tableData: []
       
     };
   },
   mounted() {
     let that=this;
     that.statistics();
+    that.baseInfoZXing();
   },
   destroyed(){
     window.onresize=null
   },
   methods: {
     statistics(){
-       console.info("进入了...")
        let that=this;
        userStatistics().then(res => {
-          console.info("请求数据...")
           if(res.errCode==200){
                 let backUserStatisticsOutput = res.data;
                 that.userNum = backUserStatisticsOutput.userNum;
@@ -184,6 +159,24 @@ export default {
                 that.userNumMember = backUserStatisticsOutput.userNumMember;
           } else{
                 that.$message('error',res.errMsg);
+          }
+        }).catch(err => {
+              this.$message("error", err.errMsg);
+        });
+    },
+
+    baseInfoZXing(){
+       console.info("进入了...")
+       let that=this;
+       let params = {};
+       params.pageNumber = 1;
+       params.pageSize = 10;
+       baseInfoZXing(params).then(res => {
+          console.info("请求数据...")
+          if(res.errCode==200){
+              this.tableData = res.data;
+          } else{
+              that.$message('error',res.errMsg);
           }
         }).catch(err => {
               this.$message("error", err.errMsg);
@@ -198,6 +191,9 @@ export default {
   background: $base-gray1;  
   .userList{
     font-size: 18px;
+  }
+  .userListPagination{
+    margin-top: 20px
   }
   .userListRow{
     margin-bottom: 20px

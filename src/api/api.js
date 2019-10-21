@@ -20,5 +20,9 @@ export const  getUserInfo=(params)=>get('/back/user/getUserInfo',params).then(re
 
 export const  userStatistics=(params)=>get('/back/user/statistics').then(res=>res.data);
 
+
+// 获取用户个人页面的二维码
+export const  baseInfoZXing=(params)=>post('/user/baseInfo/zXing',params).then(res=>res.data);
+
 // export const 
 
