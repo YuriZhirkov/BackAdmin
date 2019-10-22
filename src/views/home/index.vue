@@ -74,43 +74,133 @@
     <el-row :gutter="40" class="userListRow"> 
       <span class="userList">用户列表</span>
     </el-row>
+    <el-row :gutter="40"> 
+      <span class="userNumSpan">用户编号:</span><input id="userNum" class="userNumInput" type="text" v-model="userNum"/>
+      <span class="userNumSpan">昵称:</span><input id = "nickName" class="userNumInput" type="text" v-model="nickName"/>
+      <span class="userNumSpan">性别:</span>
+      <select class="userNumInput" id = "gender" v-model="gender">
+           <option value="1" selected>请选择..</option>
+           <option value="男">男</option>
+           <option value="女">女</option>
+      </select>
+      <span class="userNumSpan">居住地:</span><input id = "area" class="userNumInput" type="text" v-model="area"/>
+      <span class="userNumSpan">教育背景:</span><input id = "educationalBackground" class="userNumInput" type="text" v-model="educationalBackground"/>
+    </el-row>
+
+   
     <el-row :gutter="40">
-      <el-table
+        <span class="userNumSpan">年纪:</span><input id = "minAge" class="userNumInput" type="text" placeholder="最小年纪" v-model="minAge"/><span style="font-size:20px;float: left;">---</span>
+        <input id = "maxAge" class="userNumInput" type="text" placeholder="最大年纪" v-model="maxAge"/>
+        <span class="maxSalarySpan">月薪:</span><input id = "minSalary" class="userNumInput" type="text" placeholder="最小月薪" v-model="minSalary"/><span style="font-size:20px;float: left;">---</span>
+        <input id = "maxSalary" class="userNumInput" type="text" placeholder="最大月薪" v-model="maxSalary"/>
+        <span class="maxSalarySpan">身高:</span><input id = "minStature" class="userNumInput" type="text" placeholder="最小身高" v-model="minStature"/><span style="font-size:20px;float: left;">---</span>
+        <input id = "maxStature" class="userNumInput" type="text" placeholder="最大身高" v-model="maxStature"/>
+    </el-row>
+    <el-row :gutter="40">
+    <el-table
     :data="tableData"
     border
     style="width: 100%">
-    <el-table-column
-      fixed
-      prop="userId"
-      label="id"
-      width="150">
-    </el-table-column>
-    <el-table-column
+      <el-table-column prop="headUrl" label="用户头像" min-width="120%" align='center'>
+                 <!-- 图片的显示 -->
+                 <template   slot-scope="scope">            
+                    <img :src="scope.row.headUrl"  min-width="70" height="70" @error="scope.row.headUrl=''" v-if="scope.row.headUrl"/>
+                 </template>         
+      </el-table-column>
+      <el-table-column
+      align='center'
       prop="userNum"
       label="编号"
-      width="120">
+      width="80">
     </el-table-column>
     <el-table-column
+      align='center'
       prop="nickName"
       label="昵称"
       width="120">
     </el-table-column>
     <el-table-column
+      align='center'
       prop="area"
       label="居住地"
       width="120">
     </el-table-column>
     <el-table-column
+      align='center'
       prop="age"
       label="年纪"
-      width="300">
+      width="60">
     </el-table-column>
     <el-table-column
-      prop="salary"
-      label="月薪"
+      align='center'
+      prop="phone"
+      label="电话号"
       width="120">
     </el-table-column>
     <el-table-column
+      align='center'
+      prop="salary"
+      label="月薪"
+      width="100">
+    </el-table-column>
+        <el-table-column
+      align='center'
+      prop="stature"
+      label="身高"
+      width="80">
+    </el-table-column>
+    <el-table-column
+      align='center'
+      prop="gender"
+      label="性别"
+      width="80">
+    </el-table-column>
+    <el-table-column
+      align='center'
+      prop="educationalBackground"
+      label="教育背景"
+      width="80">
+    </el-table-column>
+    <el-table-column
+      align='center'
+      prop="userId"
+      label="id"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      align='center'
+      prop="createTime"
+      label="注册日期"
+      width="160">
+
+    </el-table-column>
+    <el-table-column prop="idFlag" label="身份认证" min-width="120%" align='center'>
+        <template   slot-scope="scope">            
+              <el-button type="primary" size="small"
+                  @click="generateZXing(scope.row)" v-if="scope.row.idFlag==0">身份认证
+            </el-button>
+            <span v-if="scope.row.idFlag!=0" style="color: red;">已认证</span>
+        </template>         
+    </el-table-column>
+    <el-table-column prop="educationalFlag" label="学历认证" min-width="120%" align='center'>
+        <template   slot-scope="scope">            
+              <el-button type="primary" size="small"
+                  @click="generateZXing(scope.row)" v-if="scope.row.educationalFlag==0">学历认证
+            </el-button>
+            <span v-if="scope.row.educationalFlag!=0" style="color: red;">已认证</span>
+        </template>         
+    </el-table-column>
+    <el-table-column prop="zxingUrl" label="二维码" min-width="120%" align='center'>
+        <!-- 图片的显示 -->
+        <template   slot-scope="scope">            
+            <img :src="scope.row.zxingUrl"  min-width="70" height="70" @error="scope.row.zxingUrl=''" v-if="scope.row.zxingUrl"/>
+              <el-button type="primary" size="small"
+                  @click="generateZXing(scope.row)" v-if="!scope.row.zxingUrl">生成二维码
+            </el-button>
+        </template>         
+    </el-table-column>
+  
+    <!-- <el-table-column
       fixed="right"
       label="操作"
       width="100">
@@ -118,7 +208,7 @@
         <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
         <el-button type="text" size="small">编辑</el-button>
       </template>
-    </el-table-column>
+    </el-table-column> -->
   </el-table>
     </el-row>
     <el-row :gutter="40" class="userListPagination">
@@ -128,59 +218,78 @@
   </div>
 </template>
 <script>
-import { userStatistics,baseInfoZXing } from "@api";
+import { userStatistics, baseInfoZXing } from "@api";
 export default {
   name: "home",
   data() {
     return {
-      userNum:0,
-      userNumOnLine:0,
-      userNumMember:0,
-       tableData: []
-      
+      userNum: 0,
+      userNumOnLine: 0,
+      userNumMember: 0,
+      tableData: [],
+      userNum:null,
+      nickName:null,
+      gender:null,
+      area:null,
+      minAge:null,
+      maxAge:null,
+      minSalary:null,
+      maxSalary:null,
+      minStature:null,
+      maxStature:null,
+      educationalBackground:null,
     };
   },
   mounted() {
-    let that=this;
+    let that = this;
     that.statistics();
     that.baseInfoZXing();
   },
-  destroyed(){
-    window.onresize=null
+  destroyed() {
+    window.onresize = null;
   },
   methods: {
-    statistics(){
-       let that=this;
-       userStatistics().then(res => {
-          if(res.errCode==200){
-                let backUserStatisticsOutput = res.data;
-                that.userNum = backUserStatisticsOutput.userNum;
-                that.userNumOnLine = backUserStatisticsOutput.userNumOnLine;
-                that.userNumMember = backUserStatisticsOutput.userNumMember;
-          } else{
-                that.$message('error',res.errMsg);
+    statistics() {
+      let that = this;
+      userStatistics()
+        .then(res => {
+          if (res.errCode == 200) {
+            let backUserStatisticsOutput = res.data;
+            that.userNum = backUserStatisticsOutput.userNum;
+            that.userNumOnLine = backUserStatisticsOutput.userNumOnLine;
+            that.userNumMember = backUserStatisticsOutput.userNumMember;
+          } else {
+            that.$message("error", res.errMsg);
           }
-        }).catch(err => {
-              this.$message("error", err.errMsg);
+        })
+        .catch(err => {
+          this.$message("error", err.errMsg);
         });
     },
 
-    baseInfoZXing(){
-       console.info("进入了...")
-       let that=this;
-       let params = {};
-       params.pageNumber = 1;
-       params.pageSize = 10;
-       baseInfoZXing(params).then(res => {
-          console.info("请求数据...")
-          if(res.errCode==200){
-              this.tableData = res.data;
-          } else{
-              that.$message('error',res.errMsg);
+    baseInfoZXing() {
+      console.info("进入了...");
+      let that = this;
+      let params = {};
+      params.pageNumber = 1;
+      params.pageSize = 10;
+      baseInfoZXing(params)
+        .then(res => {
+          console.info("请求数据...");
+          if (res.errCode == 200) {
+            this.tableData = res.data;
+          } else {
+            that.$message("error", res.errMsg);
           }
-        }).catch(err => {
-              this.$message("error", err.errMsg);
+        })
+        .catch(err => {
+          this.$message("error", err.errMsg);
         });
+    },
+    generateZXing(obj) {
+      let userInfo = obj;
+      console.info(userInfo.nickName);
+      this.$message("info", userInfo.nickName);
     }
   }
 };
@@ -188,15 +297,34 @@ export default {
 <style lang="scss" scoped>
 .home {
   padding: 40px;
-  background: $base-gray1;  
-  .userList{
+  background: $base-gray1;
+  .userList {
     font-size: 18px;
   }
-  .userListPagination{
-    margin-top: 20px
+  .userListPagination {
+    margin-top: 20px;
   }
-  .userListRow{
-    margin-bottom: 20px
+  .userListRow {
+    margin-bottom: 20px;
+  }
+  .userNumSpan {
+    float: left;
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+  .maxSalarySpan{
+    float: left;
+    font-size: 12px;
+    margin-bottom: 18px;
+    margin-left: 18px;
+  }
+  .userNumInput {
+    float: left;
+    font-size: 18px;
+    margin-bottom: 18px;
+    width: 120px;
+    margin-left: 7px;
+    margin-right: 7px;
   }
   .bg-white {
     background: $base-white;
@@ -273,7 +401,6 @@ export default {
       font-size: 18px;
     }
   }
-
 }
 </style>
 
