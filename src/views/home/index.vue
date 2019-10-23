@@ -75,7 +75,7 @@
       <span class="userList">用户列表</span>
     </el-row>
     <el-row :gutter="40"> 
-      <span class="userNumSpan">用户编号:</span><input id="userNum" class="userNumInput" type="text" v-model="userNum"/>
+      <span class="userNumSpan">用户编号:</span><input id="userNum" class="userNumInput" type="text" v-model="userNumInput"/>
       <span class="userNumSpan">昵称:</span><input id = "nickName" class="userNumInput" type="text" v-model="nickName"/>
       <span class="userNumSpan">性别:</span>
       <select class="userNumInput" id = "gender" v-model="gender">
@@ -95,6 +95,10 @@
         <input id = "maxSalary" class="userNumInput" type="text" placeholder="最大月薪" v-model="maxSalary"/>
         <span class="maxSalarySpan">身高:</span><input id = "minStature" class="userNumInput" type="text" placeholder="最小身高" v-model="minStature"/><span style="font-size:20px;float: left;">---</span>
         <input id = "maxStature" class="userNumInput" type="text" placeholder="最大身高" v-model="maxStature"/>
+    </el-row>
+    <el-row :gutter="40" >
+        <el-button type="primary" size="small" class="chaXunButton" @click="searchUserInfo">查询</el-button>
+        <el-button type="primary" size="small" class="chaXunButton" @click="reset">重置</el-button>
     </el-row>
     <el-row :gutter="40">
     <el-table
@@ -177,7 +181,7 @@
     <el-table-column prop="idFlag" label="身份认证" min-width="120%" align='center'>
         <template   slot-scope="scope">            
               <el-button type="primary" size="small"
-                  @click="generateZXing(scope.row)" v-if="scope.row.idFlag==0">身份认证
+                  @click="getIdentityAuthentication(scope.row.userId)" v-if="scope.row.idFlag==0">身份认证
             </el-button>
             <span v-if="scope.row.idFlag!=0" style="color: red;">已认证</span>
         </template>         
@@ -185,7 +189,7 @@
     <el-table-column prop="educationalFlag" label="学历认证" min-width="120%" align='center'>
         <template   slot-scope="scope">            
               <el-button type="primary" size="small"
-                  @click="generateZXing(scope.row)" v-if="scope.row.educationalFlag==0">学历认证
+                  @click="getIdentityAuthentication(scope.row.userId)" v-if="scope.row.educationalFlag==0">学历认证
             </el-button>
             <span v-if="scope.row.educationalFlag!=0" style="color: red;">已认证</span>
         </template>         
@@ -212,9 +216,47 @@
   </el-table>
     </el-row>
     <el-row :gutter="40" class="userListPagination">
-       <el-pagination background layout="prev, pager, next" :total="1000">
+       <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" @current-change="handleCurrentChange">
        </el-pagination>
     </el-row>
+    <!-- 弹出框  身份认证-->
+    <el-dialog title="身份认证" :visible.sync="dialogFormVisibleIdentity">
+  <el-form :model="formIdentity">
+    <el-form-item label="姓名" :label-width="formLabelWidth">
+      <!-- <el-input v-model="formIdentity.name" autocomplete="off"></el-input> -->
+      <span class="realNameSpan">姓名:</span><span class="realNameSpan">{{formIdentity.realName}}</span>
+    </el-form-item>
+    <el-form-item label="活动区域" :label-width="formLabelWidth">
+      <el-select v-model="formIdentity.region" placeholder="请选择活动区域">
+        <el-option label="区域一" value="shanghai"></el-option>
+        <el-option label="区域二" value="beijing"></el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisibleIdentity = false">取 消</el-button>
+    <el-button type="primary" @click="dialogFormVisibleIdentity = false">确 定</el-button>
+  </div>
+</el-dialog>
+
+   <!-- 弹出框 学历认证 -->
+    <!-- <el-dialog title="收货地址" :visible.sync="dialogFormVisibleIdentity">
+  <el-form :model="formIdentity">
+    <el-form-item label="活动名称" :label-width="formLabelWidth">
+      <el-input v-model="formIdentity.name" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="活动区域" :label-width="formLabelWidth">
+      <el-select v-model="formIdentity.region" placeholder="请选择活动区域">
+        <el-option label="区域一" value="shanghai"></el-option>
+        <el-option label="区域二" value="beijing"></el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisibleIdentity = false">取 消</el-button>
+    <el-button type="primary" @click="dialogFormVisibleIdentity = false">确 定</el-button>
+  </div>
+</el-dialog> -->
   </div>
 </template>
 <script>
@@ -227,17 +269,34 @@ export default {
       userNumOnLine: 0,
       userNumMember: 0,
       tableData: [],
-      userNum:null,
-      nickName:null,
-      gender:null,
-      area:null,
-      minAge:null,
-      maxAge:null,
-      minSalary:null,
-      maxSalary:null,
-      minStature:null,
-      maxStature:null,
-      educationalBackground:null,
+      userNumInput: null,
+      nickName: null,
+      gender: null,
+      area: null,
+      minAge: null,
+      maxAge: null,
+      minSalary: null,
+      maxSalary: null,
+      minStature: null,
+      maxStature: null,
+      educationalBackground: null,
+      total: 0,
+      pageSize: 3,
+      pageNumber: 1,
+      dialogFormVisibleIdentity: false,
+      dialogFormVisibleEducationBackground: false,
+      formIdentity: {
+        userId: "",
+        phone: "",
+        realName: "张志国",
+        nickName: "",
+        idCare: "",
+        idCareUrl: "",
+        headUrl: "",
+        dateOfBirth: null,
+        idFlag: 0
+      },
+      formLabelWidth: "120px"
     };
   },
   mounted() {
@@ -268,16 +327,15 @@ export default {
     },
 
     baseInfoZXing() {
-      console.info("进入了...");
       let that = this;
       let params = {};
-      params.pageNumber = 1;
-      params.pageSize = 10;
+      params.pageNumber = that.pageNumber;
+      params.pageSize = that.pageSize;
       baseInfoZXing(params)
         .then(res => {
-          console.info("请求数据...");
           if (res.errCode == 200) {
-            this.tableData = res.data;
+            that.tableData = res.data;
+            that.total = res.total;
           } else {
             that.$message("error", res.errMsg);
           }
@@ -290,6 +348,81 @@ export default {
       let userInfo = obj;
       console.info(userInfo.nickName);
       this.$message("info", userInfo.nickName);
+    },
+    reset() {
+      let that = this;
+      that.userNumInput = null;
+      that.nickName = null;
+      that.gender = null;
+      that.area = null;
+      that.minAge = null;
+      that.maxAge = null;
+      that.minSalary = null;
+      that.maxSalary = null;
+      that.minStature = null;
+      that.maxStature = null;
+      that.educationalBackground = null;
+    },
+    handleCurrentChange(val) {
+      let that = this;
+      that.pageNumber = val;
+      that.searchUserInfo();
+    },
+    getIdentityAuthentication(val) {
+      let that = this;
+      that.dialogFormVisibleIdentity = true;
+    },
+    searchUserInfo() {
+      let that = this;
+      let params = {};
+      params.pageNumber = that.pageNumber;
+      params.pageSize = that.pageSize;
+      if (that.userNumInput) {
+        params.userNum = that.userNumInput;
+      }
+      if (that.nickName) {
+        params.nickName = that.nickName;
+      }
+      if (that.gender) {
+        params.gender = that.gender;
+      }
+      if (that.area) {
+        params.area = that.area;
+      }
+      if (that.minAge) {
+        params.minAge = that.minAge;
+      }
+      if (that.maxAge) {
+        params.maxAge = that.maxAge;
+      }
+      if (that.minSalary) {
+        params.minSalary = that.minSalary;
+      }
+      if (that.maxSalary) {
+        params.maxSalary = that.maxSalary;
+      }
+      if (that.minStature) {
+        params.minStature = that.minStature;
+      }
+      if (that.maxStature) {
+        params.maxStature = that.maxStature;
+      }
+      if (that.educationalBackground) {
+        params.educationalBackground = that.educationalBackground;
+      }
+      baseInfoZXing(params)
+        .then(res => {
+          console.info(params);
+          console.info("请求数据...");
+          if (res.errCode == 200) {
+            this.tableData = res.data;
+          } else {
+            that.$message("error", res.errMsg);
+          }
+        })
+        .catch(err => {
+          this.$message("error", err.errMsg);
+        });
     }
   }
 };
@@ -298,6 +431,15 @@ export default {
 .home {
   padding: 40px;
   background: $base-gray1;
+  .chaXunButton {
+    margin-bottom: 20px;
+    margin-left: 10px;
+  }
+  .realNameSpan{
+    float: left;
+    margin-left: 5px;
+    margin-bottom: 10px;
+  }
   .userList {
     font-size: 18px;
   }
@@ -312,7 +454,7 @@ export default {
     font-size: 12px;
     margin-bottom: 18px;
   }
-  .maxSalarySpan{
+  .maxSalarySpan {
     float: left;
     font-size: 12px;
     margin-bottom: 18px;
