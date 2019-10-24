@@ -26,3 +26,16 @@ export const  baseInfoZXing=(params)=>post('/user/baseInfo/zXing',params).then(r
 
 // export const 
 
+//4. 获取身份认证信息
+export const  getIdentityAuthentication=(params)=>get('/back/user/getIdentityAuthentication',params).then(res=>res.data);
+
+//5. 获取用户的学历信息
+export const  getEducationBackgroundAuthentication=(params)=>get('/back/user/getEducationBackgroundAuthentication',params).then(res=>res.data);
+
+
+// 6. 认证用户
+export const  authentication=(params)=>post('/back/user/authentication',params).then(res=>res.data);
+
+// 6. 认证用户
+export const  generateZXing=(params)=>get('/user/baseInfo/generateZXing',params).then(res=>res.data);
+

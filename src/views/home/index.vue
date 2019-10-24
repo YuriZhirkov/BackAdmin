@@ -101,119 +101,110 @@
         <el-button type="primary" size="small" class="chaXunButton" @click="reset">重置</el-button>
     </el-row>
     <el-row :gutter="40">
-    <el-table
-    :data="tableData"
-    border
-    style="width: 100%">
-      <el-table-column prop="headUrl" label="用户头像" min-width="120%" align='center'>
-                 <!-- 图片的显示 -->
-                 <template   slot-scope="scope">            
-                    <img :src="scope.row.headUrl"  min-width="70" height="70" @error="scope.row.headUrl=''" v-if="scope.row.headUrl"/>
-                 </template>         
-      </el-table-column>
-      <el-table-column
-      align='center'
-      prop="userNum"
-      label="编号"
-      width="80">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="nickName"
-      label="昵称"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="area"
-      label="居住地"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="age"
-      label="年纪"
-      width="60">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="phone"
-      label="电话号"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="salary"
-      label="月薪"
-      width="100">
-    </el-table-column>
+        <el-table
+        :data="tableData"
+        border
+        style="width: 100%">
+          <el-table-column prop="headUrl" label="用户头像" min-width="120%" align='center'>
+                    <!-- 图片的显示 -->
+                    <template   slot-scope="scope">            
+                        <img :src="scope.row.headUrl"  min-width="70" height="70" @error="scope.row.headUrl=''" v-if="scope.row.headUrl"/>
+                    </template>         
+          </el-table-column>
+          <el-table-column
+          align='center'
+          prop="userNum"
+          label="编号"
+          width="80">
+        </el-table-column>
         <el-table-column
-      align='center'
-      prop="stature"
-      label="身高"
-      width="80">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="gender"
-      label="性别"
-      width="80">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="educationalBackground"
-      label="教育背景"
-      width="80">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="userId"
-      label="id"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      align='center'
-      prop="createTime"
-      label="注册日期"
-      width="160">
+          align='center'
+          prop="nickName"
+          label="昵称"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="area"
+          label="居住地"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="age"
+          label="年纪"
+          width="60">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="phone"
+          label="电话号"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="salary"
+          label="月薪"
+          width="100">
+        </el-table-column>
+            <el-table-column
+          align='center'
+          prop="stature"
+          label="身高"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="gender"
+          label="性别"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="educationalBackground"
+          label="教育背景"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="userId"
+          label="id"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="createTime"
+          label="注册日期"
+          width="160">
 
-    </el-table-column>
-    <el-table-column prop="idFlag" label="身份认证" min-width="120%" align='center'>
-        <template   slot-scope="scope">            
-              <el-button type="primary" size="small"
-                  @click="getIdentityAuthentication(scope.row.userId)" v-if="scope.row.idFlag==0">身份认证
-            </el-button>
-            <span v-if="scope.row.idFlag!=0" style="color: red;">已认证</span>
-        </template>         
-    </el-table-column>
-    <el-table-column prop="educationalFlag" label="学历认证" min-width="120%" align='center'>
-        <template   slot-scope="scope">            
-              <el-button type="primary" size="small"
-                  @click="getIdentityAuthentication(scope.row.userId)" v-if="scope.row.educationalFlag==0">学历认证
-            </el-button>
-            <span v-if="scope.row.educationalFlag!=0" style="color: red;">已认证</span>
-        </template>         
-    </el-table-column>
-    <el-table-column prop="zxingUrl" label="二维码" min-width="120%" align='center'>
-        <!-- 图片的显示 -->
-        <template   slot-scope="scope">            
-            <img :src="scope.row.zxingUrl"  min-width="70" height="70" @error="scope.row.zxingUrl=''" v-if="scope.row.zxingUrl"/>
-              <el-button type="primary" size="small"
-                  @click="generateZXing(scope.row)" v-if="!scope.row.zxingUrl">生成二维码
-            </el-button>
-        </template>         
-    </el-table-column>
-  
-    <!-- <el-table-column
-      fixed="right"
-      label="操作"
-      width="100">
-      <template slot-scope="scope">
-        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-        <el-button type="text" size="small">编辑</el-button>
-      </template>
-    </el-table-column> -->
-  </el-table>
+        </el-table-column>
+        <el-table-column prop="idFlag" label="身份认证" min-width="120%" align='center'>
+            <template   slot-scope="scope">            
+                  <el-button type="primary" size="small"
+                      @click="getIdentityAuthentication(scope.row.userId)" v-if="scope.row.idFlag==0">身份认证
+                </el-button>
+                <span v-if="scope.row.idFlag!=0" style="color: red;">已认证</span>
+            </template>         
+        </el-table-column>
+        <el-table-column prop="educationalFlag" label="学历认证" min-width="120%" align='center'>
+            <template   slot-scope="scope">            
+                  <el-button type="primary" size="small"
+                      @click="getEducationBackgroundAuthentication(scope.row.userId)" v-if="scope.row.educationalFlag==0">学历认证
+                </el-button>
+                <span v-if="scope.row.educationalFlag!=0" style="color: red;">已认证</span>
+            </template>         
+        </el-table-column>
+        <el-table-column prop="zxingUrl" label="二维码" min-width="120%" align='center'>
+            <!-- 图片的显示 -->
+            <template   slot-scope="scope">            
+                <img :src="scope.row.zxingUrl"  min-width="70" height="70" @error="scope.row.zxingUrl=''" v-if="scope.row.zxingUrl"/>
+                  <el-button type="primary" size="small"
+                      @click="generateZXing(scope.row.userId)" v-if="!scope.row.zxingUrl">生成二维码
+                </el-button>
+            </template>         
+        </el-table-column>
+
+      </el-table>
     </el-row>
     <el-row :gutter="40" class="userListPagination">
        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" @current-change="handleCurrentChange">
@@ -221,46 +212,110 @@
     </el-row>
     <!-- 弹出框  身份认证-->
     <el-dialog title="身份认证" :visible.sync="dialogFormVisibleIdentity">
-  <el-form :model="formIdentity">
-    <el-form-item label="姓名" :label-width="formLabelWidth">
-      <!-- <el-input v-model="formIdentity.name" autocomplete="off"></el-input> -->
-      <span class="realNameSpan">姓名:</span><span class="realNameSpan">{{formIdentity.realName}}</span>
-    </el-form-item>
-    <el-form-item label="活动区域" :label-width="formLabelWidth">
-      <el-select v-model="formIdentity.region" placeholder="请选择活动区域">
-        <el-option label="区域一" value="shanghai"></el-option>
-        <el-option label="区域二" value="beijing"></el-option>
-      </el-select>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="dialogFormVisibleIdentity = false">取 消</el-button>
-    <el-button type="primary" @click="dialogFormVisibleIdentity = false">确 定</el-button>
-  </div>
-</el-dialog>
+      <div class="formWrap">
+        <el-form :model="formIdentity">
+          <el-form-item>
+            <p class="lineSpan"><span>姓名:</span><span>{{formIdentity.realName}}</span></p>
+            <p class="lineSpan">
+              <span>头像:</span>
+              <img :src="formIdentity.headUrl"  min-width="70" height="70" @error="formIdentity.headUrl=''" v-if="formIdentity.headUrl"/>
+            </p>
+            <p class="lineSpan">
+              <span>昵称:</span><span>{{formIdentity.nickName}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>手 机 号:</span><span>{{formIdentity.phone}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>身份证号:</span><span>{{formIdentity.idCare}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>出生日期:</span><span>{{formIdentity.dateOfBirth}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>身份证正面照:</span><img :src="formIdentity.idCareUrl0"  min-width="140" height="90" @error="formIdentity.idCareUrl0=''" v-if="formIdentity.idCareUrl0"/>
+            </p>
+            <p class="lineSpan">
+              <span>身份证反面照:</span><img :src="formIdentity.idCareUrl1"  min-width="140" height="90" @error="formIdentity.idCareUrl1=''" v-if="formIdentity.idCareUrl1"/>
+            </p>
+             <p class="lineSpan">
+              <span >认证备注:</span><input type="text" v-model="msg" style="width:60%;"/>
+            </p>
+            <p class="lineSpan">
+              <span >认证状态:</span>
+              <select v-model="flag" style="width:70px;">
+                <option value=0>认证失败</option>
+                <option value=1>认证成功</option>
+             </select>
+            </p>
 
-   <!-- 弹出框 学历认证 -->
-    <!-- <el-dialog title="收货地址" :visible.sync="dialogFormVisibleIdentity">
-  <el-form :model="formIdentity">
-    <el-form-item label="活动名称" :label-width="formLabelWidth">
-      <el-input v-model="formIdentity.name" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="活动区域" :label-width="formLabelWidth">
-      <el-select v-model="formIdentity.region" placeholder="请选择活动区域">
-        <el-option label="区域一" value="shanghai"></el-option>
-        <el-option label="区域二" value="beijing"></el-option>
-      </el-select>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="dialogFormVisibleIdentity = false">取 消</el-button>
-    <el-button type="primary" @click="dialogFormVisibleIdentity = false">确 定</el-button>
-  </div>
-</el-dialog> -->
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleIdentity = false">取 消</el-button>
+        <el-button type="primary" @click="authentication(1)">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 弹出框  学历认证-->
+    <el-dialog title="学历认证" :visible.sync="dialogFormVisibleEducationBackground">
+      <div class="formWrap">
+        <el-form :model="formEducation">
+          <el-form-item>
+            <p class="lineSpan"><span>姓名:</span><span>{{formEducation.realName}}</span></p>
+            <p class="lineSpan">
+              <span>头像:</span>
+              <img :src="formEducation.headUrl"  min-width="70" height="70" @error="formEducation.headUrl=''" v-if="formEducation.headUrl"/>
+            </p>
+            <p class="lineSpan">
+              <span>昵称:</span><span>{{formEducation.nickName}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>手 机 号:</span><span>{{formEducation.phone}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>毕业证编号:</span><span>{{formEducation.educationalNum}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>毕业学校:</span><span>{{formEducation.schoolName}}</span>
+            </p>
+            <p class="lineSpan">
+              <span>学历照片:</span><img :src="formEducation.educationalUrls1"  min-width="140" height="90" @error="formEducation.educationalUrls1=''" v-if="formEducation.educationalUrls1"/>
+            </p>
+            <p class="lineSpan">
+              <span>学位照片:</span><img :src="formEducation.educationalUrls0"  min-width="140" height="90" @error="formEducation.educationalUrls0=''" v-if="formEducation.educationalUrls0"/>
+            </p>
+             <p class="lineSpan">
+              <span >认证备注:</span><input type="text" v-model="msg" style="width:60%;"/>
+            </p>
+            <p class="lineSpan">
+              <span >认证状态:</span>
+              <select v-model="flag" style="width:70px;">
+                <option value=0>认证失败</option>
+                <option value=1>认证成功</option>
+             </select>
+            </p>
+
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleEducationBackground = false">取 消</el-button>
+        <el-button type="primary" @click="authentication(2)">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { userStatistics, baseInfoZXing } from "@api";
+import {
+  userStatistics,
+  baseInfoZXing,
+  getIdentityAuthentication,
+  authentication,
+  getEducationBackgroundAuthentication,
+  generateZXing
+} from "@api";
+import { exists } from "fs";
 export default {
   name: "home",
   data() {
@@ -285,18 +340,33 @@ export default {
       pageNumber: 1,
       dialogFormVisibleIdentity: false,
       dialogFormVisibleEducationBackground: false,
+      flag: null,
       formIdentity: {
-        userId: "",
-        phone: "",
-        realName: "张志国",
-        nickName: "",
-        idCare: "",
-        idCareUrl: "",
-        headUrl: "",
+        userId: null,
+        phone: null,
+        realName: null,
+        nickName: null,
+        idCare: null,
+        idCareUrl0: null,
+        idCareUrl1: null,
+        headUrl: null,
         dateOfBirth: null,
-        idFlag: 0
+        idFlag: null
       },
-      formLabelWidth: "120px"
+      formEducation: {
+        userId: null,
+        phone: null,
+        realName: null,
+        nickName: null,
+        headUrl: null,
+        educationalBackground: null,
+        educationalNum: null,
+        educationalUrls0: null,
+        educationalUrls1: null,
+        schoolName: null,
+        educationalFlag: null
+      },
+      msg: ""
     };
   },
   mounted() {
@@ -344,11 +414,6 @@ export default {
           this.$message("error", err.errMsg);
         });
     },
-    generateZXing(obj) {
-      let userInfo = obj;
-      console.info(userInfo.nickName);
-      this.$message("info", userInfo.nickName);
-    },
     reset() {
       let that = this;
       that.userNumInput = null;
@@ -371,6 +436,20 @@ export default {
     getIdentityAuthentication(val) {
       let that = this;
       that.dialogFormVisibleIdentity = true;
+      let params = {};
+      params.userId = val;
+      getIdentityAuthentication(params)
+        .then(res => {
+          if (res.errCode == 200) {
+            console.info(res.data);
+            this.formIdentity = res.data;
+          } else {
+            that.$message("error", res.errMsg);
+          }
+        })
+        .catch(err => {
+          this.$message("error", err.errMsg);
+        });
     },
     searchUserInfo() {
       let that = this;
@@ -413,9 +492,89 @@ export default {
       baseInfoZXing(params)
         .then(res => {
           console.info(params);
-          console.info("请求数据...");
           if (res.errCode == 200) {
             this.tableData = res.data;
+          } else {
+            that.$message("error", res.errMsg);
+          }
+        })
+        .catch(err => {
+          this.$message("error", err.errMsg);
+        });
+    },
+    authentication(type) {
+      let that = this;
+      let params = {};
+      if (type === 1) {
+        params.userId = that.formIdentity.userId;
+      } else {
+       params.userId = that.formEducation.userId;
+      }
+      
+      params.assessorId = that.$store.state.userId;
+      if (that.msg != "") {
+        params.msg = that.msg;
+      } else {
+        that.$message("error", "认证备注不能为空");
+      }
+      if (that.flag) {
+        params.flag = that.flag;
+      } else {
+        that.$message("error", "认证状态不能为空");
+      }
+      params.type = type;
+      authentication(params)
+        .then(res => {
+          console.info(params);
+          if (res.errCode == 200) {
+            that.msg = null;
+            that.flag = null;
+            that.$message("info", res.errMsg);
+            if (type === 1) {
+              that.dialogFormVisibleIdentity = false;
+            } else {
+              that.dialogFormVisibleEducationBackground = false;
+            }
+            that.searchUserInfo();
+          } else {
+            that.msg = null;
+            that.flag = null;
+            that.$message("error", res.errMsg);
+          }
+        })
+        .catch(err => {
+          that.msg = null;
+          that.flag = null;
+          this.$message("error", err.errMsg);
+        });
+    },
+    getEducationBackgroundAuthentication(val) {
+      let that = this;
+      that.dialogFormVisibleEducationBackground = true;
+      let params = {};
+      params.userId = val;
+      getEducationBackgroundAuthentication(params)
+        .then(res => {
+          if (res.errCode == 200) {
+            this.formEducation = res.data;
+          } else {
+            that.$message("error", res.errMsg);
+          }
+        })
+        .catch(err => {
+          this.$message("error", err.errMsg);
+        });
+    },
+    generateZXing(val) {
+      let that = this;
+      let params = {};
+      params.userId = val;
+      
+      generateZXing(params)
+        .then(res => {
+          if (res.errCode == 200) {
+            console.info("请求数据...");
+            that.searchUserInfo();
           } else {
             that.$message("error", res.errMsg);
           }
@@ -434,11 +593,6 @@ export default {
   .chaXunButton {
     margin-bottom: 20px;
     margin-left: 10px;
-  }
-  .realNameSpan{
-    float: left;
-    margin-left: 5px;
-    margin-bottom: 10px;
   }
   .userList {
     font-size: 18px;
@@ -543,6 +697,16 @@ export default {
       font-size: 18px;
     }
   }
+  .formWrap {
+    .lineSpan {
+      display: flex;
+      margin-bottom: 10px;
+      span:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
 }
 </style>
+
 
