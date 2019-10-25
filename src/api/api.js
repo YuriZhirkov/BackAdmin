@@ -1,6 +1,5 @@
 import {get,post} from './request';
 // let api_pro="dfsfdasdf"
-// let api_dev="http://127.0.0.1:8852";
 // let api=api_dev;
 
 //注册//登陆

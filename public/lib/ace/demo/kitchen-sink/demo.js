@@ -2227,7 +2227,7 @@ function saveDoc(name, callback) {
 function upload(url, data, callback) {
     var absUrl = net.qualifyURL(url);
     if (/^file:/.test(absUrl))
-        absUrl = "http://localhost:8888/" + url;
+        absUrl = "http://localhost:8080/" + url;
     url = absUrl;
     if (!/^https?:/.test(url))
         return callback(new Error("Unsupported url scheme"));

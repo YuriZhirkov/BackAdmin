@@ -121,7 +121,7 @@ module.exports = {
     config.plugins = [...config.plugins, ...plugins];
   },
   devServer: {
-    port: 8888, // 端口
+    port: 8080, // 端口
     open: true, // 自动开启浏览器
     compress: false, // 开启压缩
     overlay: {
