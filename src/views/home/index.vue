@@ -173,7 +173,7 @@
         </el-table-column>
         <el-table-column
           align='center'
-          prop="createTime"
+          prop="checkTime"
           label="注册日期"
           width="160">
 
@@ -181,17 +181,17 @@
         <el-table-column prop="idFlag" label="身份认证" min-width="120%" align='center'>
             <template   slot-scope="scope">            
                   <el-button type="primary" size="small"
-                      @click="getIdentityAuthentication(scope.row.userId)" v-if="scope.row.idFlag==0">身份认证
+                      @click="getIdentityAuthentication(scope.row.userId)" v-if="scope.row.idFlag!='1'">身份认证
                 </el-button>
-                <span v-if="scope.row.idFlag!=0" style="color: red;">已认证</span>
+                <span v-if="scope.row.idFlag=='1'" style="color: red;">已认证</span>
             </template>         
         </el-table-column>
         <el-table-column prop="educationalFlag" label="学历认证" min-width="120%" align='center'>
             <template   slot-scope="scope">            
                   <el-button type="primary" size="small"
-                      @click="getEducationBackgroundAuthentication(scope.row.userId)" v-if="scope.row.educationalFlag==0">学历认证
+                      @click="getEducationBackgroundAuthentication(scope.row.userId)" v-if="scope.row.educationalFlag!='1'">学历认证
                 </el-button>
-                <span v-if="scope.row.educationalFlag!=0" style="color: red;">已认证</span>
+                <span v-if="scope.row.educationalFlag=='1'" style="color: red;">已认证</span>
             </template>         
         </el-table-column>
         <el-table-column prop="zxingUrl" label="二维码" min-width="120%" align='center'>
@@ -221,23 +221,32 @@
               <img :src="formIdentity.headUrl"  min-width="70" height="70" @error="formIdentity.headUrl=''" v-if="formIdentity.headUrl"/>
             </p>
             <p class="lineSpan">
+              <span>性别:</span><span>{{formIdentity.gender}}</span>
+            </p>
+            <p class="lineSpan">
               <span>昵称:</span><span>{{formIdentity.nickName}}</span>
             </p>
             <p class="lineSpan">
               <span>手 机 号:</span><span>{{formIdentity.phone}}</span>
             </p>
             <p class="lineSpan">
-              <span>身份证号:</span><span>{{formIdentity.idCare}}</span>
+              <span>微信号:</span><span>{{formIdentity.weChat}}</span>
             </p>
+            <p class="lineSpan">
+              <span>qq号:</span><span>{{formIdentity.qq}}</span>
+            </p>
+            <!-- <p class="lineSpan">
+              <span>身份证号:</span><span>{{formIdentity.idCare}}</span>
+            </p> -->
             <p class="lineSpan">
               <span>出生日期:</span><span>{{formIdentity.dateOfBirth}}</span>
             </p>
-            <p class="lineSpan">
+            <!-- <p class="lineSpan">
               <span>身份证正面照:</span><img :src="formIdentity.idCareUrl0"  min-width="140" height="90" @error="formIdentity.idCareUrl0=''" v-if="formIdentity.idCareUrl0"/>
             </p>
             <p class="lineSpan">
               <span>身份证反面照:</span><img :src="formIdentity.idCareUrl1"  min-width="140" height="90" @error="formIdentity.idCareUrl1=''" v-if="formIdentity.idCareUrl1"/>
-            </p>
+            </p> -->
              <p class="lineSpan">
               <span >认证备注:</span><input type="text" v-model="msg" style="width:60%;"/>
             </p>
@@ -274,17 +283,17 @@
               <span>手 机 号:</span><span>{{formEducation.phone}}</span>
             </p>
             <p class="lineSpan">
-              <span>毕业证编号:</span><span>{{formEducation.educationalNum}}</span>
+              <span>学历:</span><span>{{formEducation.educationalBackground}}</span>
             </p>
             <p class="lineSpan">
               <span>毕业学校:</span><span>{{formEducation.schoolName}}</span>
             </p>
-            <p class="lineSpan">
+            <!-- <p class="lineSpan">
               <span>学历照片:</span><img :src="formEducation.educationalUrls1"  min-width="140" height="90" @error="formEducation.educationalUrls1=''" v-if="formEducation.educationalUrls1"/>
             </p>
             <p class="lineSpan">
               <span>学位照片:</span><img :src="formEducation.educationalUrls0"  min-width="140" height="90" @error="formEducation.educationalUrls0=''" v-if="formEducation.educationalUrls0"/>
-            </p>
+            </p> -->
              <p class="lineSpan">
               <span >认证备注:</span><input type="text" v-model="msg" style="width:60%;"/>
             </p>
@@ -336,7 +345,7 @@ export default {
       maxStature: null,
       educationalBackground: null,
       total: 0,
-      pageSize: 3,
+      pageSize: 10,
       pageNumber: 1,
       dialogFormVisibleIdentity: false,
       dialogFormVisibleEducationBackground: false,
