@@ -29,6 +29,13 @@ const myRouter = new Router({
                     }
                 },
                 {
+                    path: '/district',
+                    component: getComponent('business', 'district'),
+                    meta: {
+                        title: 'district'
+                    }
+                },
+                {
                     path: '/element',
                     component: getComponent('icons', 'elementIcom'),
                     meta: {
