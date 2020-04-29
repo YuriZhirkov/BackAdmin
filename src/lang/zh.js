@@ -21,7 +21,8 @@ const zh={
         cricle:'饼图',
         permissionMenu:'菜单测试',
         permissionBtn:'按钮测试',
-        '404':'404'
+        '404':'404',
+        businessList:'商圈管理'
     },
     header:{
         fullScreen:'全屏',

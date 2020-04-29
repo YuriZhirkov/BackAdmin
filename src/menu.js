@@ -114,5 +114,10 @@ export const menu = [
     icon: "el-icon-mobile-phone",
     index: "https://github.com/zhuyihe/vue-admin-project",
     title: "link"
+  },
+  {
+    icon: "el-icon-mobile-phone",
+    index: "businessList",
+    title: "businessList"
   }
 ];

@@ -38,3 +38,9 @@ export const  authentication=(params)=>post('/back/user/authentication',params).
 // 6. 认证用户
 export const  generateZXing=(params)=>get('/user/baseInfo/generateZXing',params).then(res=>res.data);
 
+// 搜索商圈
+export const  searchBusinessDistrict=(params)=>post('/dateBusinessDistrict/searchBusinessDistrict',params).then(res=>res.data);
+
+// 添加商圈
+export const  addOrUpdate=(params)=>post('/dateBusinessDistrict/addOrUpdate',params).then(res=>res.data);
+

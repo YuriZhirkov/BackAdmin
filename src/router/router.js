@@ -133,6 +133,13 @@ const myRouter = new Router({
                     meta: {
                         title: '403'
                     }
+                },
+                {
+                    path: '/businessList',
+                    component: getComponent('business', 'businessList'),
+                    meta: {
+                        title: 'businessList'
+                    }
                 }
             ]
         }, {

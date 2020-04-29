@@ -21,7 +21,8 @@ const en={
         cricle:'Cricle',
         permissionMenu:'Menu',
         permissionBtn:'PermissionBtn',
-        '404':'404'
+        '404':'404',
+        businessList:'BusinessManager'
     },
     header:{
         fullScreen:'fullScreen',
