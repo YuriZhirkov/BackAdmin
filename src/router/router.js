@@ -29,10 +29,10 @@ const myRouter = new Router({
                     }
                 },
                 {
-                    path: '/district',
-                    component: getComponent('business', 'district'),
+                    path: '/orderList',
+                    component: getComponent('order', 'orderList'),
                     meta: {
-                        title: 'district'
+                        title: 'orderList'
                     }
                 },
                 {

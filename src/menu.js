@@ -6,9 +6,8 @@ export const menu = [
     title: "home"
   },
   {
-    icon: "el-icon-news",
-    index: "district",
-    title: "district"
+    index: "orderList",
+    title: "orderList"
   },
   {
     icon: "el-icon-edit",

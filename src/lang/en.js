@@ -1,7 +1,7 @@
 const en={
     route:{
         home:'Home',
-        district:'BusinessManager',
+        orderList:'orderList',
         icon:'Icon',
         component:'Component',
         charts:'Charts',
