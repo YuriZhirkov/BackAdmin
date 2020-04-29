@@ -6,6 +6,11 @@ export const menu = [
     title: "home"
   },
   {
+    icon: "el-icon-news",
+    index: "district",
+    title: "district"
+  },
+  {
     icon: "el-icon-edit",
     index: "icon",
     title: "icon",

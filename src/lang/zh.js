@@ -1,6 +1,7 @@
 const zh={
     route:{
         home:'首页',
+        district:'商圈管理',
         icon:'图标',
         component:'组件',
         charts:'图表',
