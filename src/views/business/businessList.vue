@@ -1,17 +1,8 @@
 <template>
   <div class="businessManager">
     <el-row :gutter="5">
-      <el-col :span="3">
-        <el-input type="text" v-model="searchQuery.name" placeholder="商圈名称" clearable />
-      </el-col>
-      <el-col :span="3">
-        <el-input type="text" v-model="searchQuery.address" placeholder="商圈地址" clearable />
-      </el-col>
-      <el-col :span="3">
-        <el-input type="text" v-model="searchQuery.desc" placeholder="简介" clearable />
-      </el-col>
-      <el-col :span="3">
-        <el-input type="text" v-model="searchQuery.tag" placeholder="商圈标签" clearable />
+      <el-col :span="10">
+        <el-input type="text" v-model="searchQuery.keyWord" placeholder="商圈名称/商圈简介/商圈地址/商圈标签/活动描述/活动标题" clearable />
       </el-col>
       <el-col :span="5">
         <el-date-picker
@@ -40,11 +31,21 @@
       >
         <el-table-column type="index" label="序号" width="55"></el-table-column>
         <el-table-column prop="districtName" label="商圈名称"></el-table-column>
-        <el-table-column prop="logo" label="商圈图标"></el-table-column>
+        <el-table-column label="商圈图标">
+          <template slot-scope="scope">
+            <div class="demo-image__preview">
+              <el-image 
+                style="width: 50px; height: 50px"
+                :src="scope.row.logo" 
+                :preview-src-list="scope.row.showLogoList">
+              </el-image>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="address" label="商圈地址" ></el-table-column>
-        <el-table-column prop="desc" label="商圈简介"></el-table-column>
-        <el-table-column prop="tag" label="商圈标签"></el-table-column>
-        <el-table-column prop="activity" label="优惠活动" width="100"></el-table-column>
+        <el-table-column prop="briefIntroduction" label="商圈简介"></el-table-column>
+        <el-table-column prop="labels" label="商圈标签"></el-table-column>
+        <el-table-column prop="activityDesc" label="优惠活动" width="100"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="160"></el-table-column>
         <el-table-column prop="updateTime" label="更新时间" width="160"></el-table-column>
         <el-table-column label="操作" width="100">
@@ -55,8 +56,8 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="viewRow(scope.$index, scope.row)">编辑</el-dropdown-item>
                 <el-dropdown-item @click.native="delRow(scope.$index, scope.row)">删除</el-dropdown-item>
-                <el-dropdown-item @click.native="viewRow(scope.$index, scope.row)">查看</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -72,7 +73,7 @@
         :total="total"
       ></el-pagination>
     </el-row>
-    <editBusiness :dialogInfo="dialogInfo"></editBusiness>
+    <editBusiness :dialogInfo="dialogInfo" @refresh="getList"></editBusiness>
   </div>
 </template>
 <script>
@@ -86,10 +87,7 @@ export default {
     return {
       pageLoading: false,
       searchQuery: {
-        name:'',
-        address:'',
-        desc:'',
-        tag:'',
+        keyWord:'',
         date:[],
         currPage: 1,
         pageSize: 10
@@ -98,7 +96,7 @@ export default {
       total: 0,
       dialogInfo:{
         show: false,
-        info: {}
+        id: ''
       }
     };
   },
@@ -107,8 +105,6 @@ export default {
   },
   computed: {},
   mounted() {
-    // let item = {id:1,name:'rxy',icon:'123',address:'123',desc:'zhangzhiguo',tag:'3344',activity:'0.8',createTime:'2020-02-01 12:32:15',updateTime:'2020-04-01 01:22:05'}
-    // this.dataList.push(item)
     this.total = 1
     this.getList()
   },
@@ -119,24 +115,34 @@ export default {
       }
       this.pageLoading = true
       let params = {
+        keyWord: this.searchQuery.keyWord,
         pageNumber: this.searchQuery.currPage,
         pageSize: this.searchQuery.pageSize
       }
       searchBusinessDistrict(params).then(res=>{
         if(res.errCode){
-          this.total = res.total
-          this.dataList = res.data
+          if(res.total>0){
+            this.total = res.total
+            let data = res.data
+            data.forEach(item=>{
+              item.showLogoList = []
+              if(item.logo){
+                item.showLogoList.push(item.logo)
+              }
+            })
+            this.dataList = data
+          }else{
+            this.total = 0
+            this.dataList = []
+          }
         }else{
           this.$message("error",res.errMsg)
         }
+        this.pageLoading =false
       })
-      this.pageLoading =false
     },
     reset(){
-      this.searchQuery.name = ''
-      this.searchQuery.address = ''
-      this.searchQuery.desc = ''
-      this.searchQuery.tag = ''
+      this.searchQuery.keyWord = ''
       this.searchQuery.date = []
       this.searchQuery.currPage = 1
       this.searchQuery.pageSize = 10
@@ -156,11 +162,11 @@ export default {
       })
     },
     viewRow(index,row){
-      this.dialogInfo.info = row
+      this.dialogInfo.id = row.id
       this.dialogInfo.show = true
     },
     addRow(){
-      this.dialogInfo.info = null
+      this.dialogInfo.id = null
       this.dialogInfo.show = true
     },
     handleSizeChange(pageSize) {
