@@ -38,9 +38,20 @@ export const  authentication=(params)=>post('/back/user/authentication',params).
 // 6. 认证用户
 export const  generateZXing=(params)=>get('/user/baseInfo/generateZXing',params).then(res=>res.data);
 
+
 // 搜索商圈
 export const  searchBusinessDistrict=(params)=>post('/dateBusinessDistrict/searchBusinessDistrict',params).then(res=>res.data);
 
 // 添加商圈
 export const  addOrUpdate=(params)=>post('/dateBusinessDistrict/addOrUpdate',params).then(res=>res.data);
 
+// 删除商圈
+export const  deleteBusinessDistrict=(params)=>get('/dateBusinessDistrict/deleteBusinessDistrictById',params).then(res=>res.data);
+
+// 根据id查询商圈详情
+export const  getBusinessDistrictById=(params)=>get('/dateBusinessDistrict/getBusinessDistrictById',params).then(res=>res.data);
+
+
+// 查询订单
+// 根据id查询订单详情
+// 搜索订单

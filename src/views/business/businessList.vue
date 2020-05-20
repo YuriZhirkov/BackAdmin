@@ -77,7 +77,7 @@
   </div>
 </template>
 <script>
-import {searchBusinessDistrict} from "../../api/api"
+import {searchBusinessDistrict,deleteBusinessDistrict} from "../../api/api"
 import editBusiness from "./editBusiness";
 export default {
   components: {
