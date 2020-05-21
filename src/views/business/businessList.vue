@@ -148,18 +148,24 @@ export default {
       this.searchQuery.pageSize = 10
     },
     delRow(index,row){
-      this.$confirm('是否确定删除此条信息', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-      }).then(() => {
-        this.pageLoading = true
-        let params = {
-          id: row.id
-        }
-        this.pageLoading = false
-        this.$message("success",'删除成功！')
-      }).catch(() => {
-      })
+        this.$confirm('是否确定删除此条信息', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+        }).then(() => {
+          this.pageLoading = true
+          let params = {
+            id: row.id
+          }
+          deleteBusinessDistrict(params).then(res=>{
+            this.pageLoading = false
+            if(res.errCode == 200){
+            this.$message("success",'删除成功！')
+            this.getList()
+            }else{
+            this.$message("error",'删除失败！')
+            }
+          })
+        }).catch(() => {})
     },
     viewRow(index,row){
       this.dialogInfo.id = row.id
