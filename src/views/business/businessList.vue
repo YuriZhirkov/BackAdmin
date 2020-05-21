@@ -115,9 +115,9 @@ export default {
       if(val==1){
         this.currPage = 1
       }
-      debugger
-      console.log(this.searchQuery.date[1]);
-      console.log(this.searchQuery.date[0]);
+      // debugger
+      // console.log(this.searchQuery.date[1]);
+      // console.log(this.searchQuery.date[0]);
       this.pageLoading = true
       let params = {
         keyWord: this.searchQuery.keyWord,

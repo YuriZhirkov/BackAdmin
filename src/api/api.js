@@ -55,7 +55,7 @@ export const  getBusinessDistrictById=(params)=>get('/dateBusinessDistrict/getBu
 export const  getOrderById=(params)=>get('/order/get',params).then(res=>res.data);
 
 // 搜索订单
-export const  getOrderList=(params)=>pst('/order/list',params).then(res=>res.data);
+export const  getOrderList=(params)=>post('/order/list',params).then(res=>res.data);
 
 // 退单操作
 export const  payRefund=(params)=>get('/pay/refund',params).then(res=>res.data);
