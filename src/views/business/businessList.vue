@@ -120,7 +120,7 @@ export default {
         pageSize: this.searchQuery.pageSize
       }
       searchBusinessDistrict(params).then(res=>{
-        if(res.errCode){
+        if(res.errCode == 200){
           if(res.total>0){
             this.total = res.total
             let data = res.data
