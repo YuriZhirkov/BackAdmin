@@ -9,6 +9,8 @@
           v-model="searchQuery.date"
           type="daterange"
           range-separator="至"
+          value-format=" yyyy-MM-dd HH:mm:ss" 
+          format="yyyy-MM-dd HH:mm:ss"
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>      
@@ -113,6 +115,9 @@ export default {
       if(val==1){
         this.currPage = 1
       }
+      debugger
+      console.log(this.searchQuery.date[1]);
+      console.log(this.searchQuery.date[0]);
       this.pageLoading = true
       let params = {
         keyWord: this.searchQuery.keyWord,

@@ -51,7 +51,12 @@ export const  deleteBusinessDistrict=(params)=>get('/dateBusinessDistrict/delete
 // 根据id查询商圈详情
 export const  getBusinessDistrictById=(params)=>get('/dateBusinessDistrict/getBusinessDistrictById',params).then(res=>res.data);
 
-
-// 查询订单
 // 根据id查询订单详情
+export const  getOrderById=(params)=>get('/order/get',params).then(res=>res.data);
+
 // 搜索订单
+export const  getOrderList=(params)=>pst('/order/list',params).then(res=>res.data);
+
+// 退单操作
+export const  payRefund=(params)=>get('/pay/refund',params).then(res=>res.data);
+
