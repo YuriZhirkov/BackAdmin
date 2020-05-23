@@ -1,72 +1,82 @@
 <template>
     <div class="editBusiness">
         <el-dialog :visible="dialogInfo.show" width="80%" @close="closeDialog" @open="openDialog"
-            :close-on-click-modal="false" :title="title">
-            <el-form ref="editBusinessForm" v-loading="pageLoading" label-position="left" label-width="80px" :rules="rules" :model="info">
-                <el-form-item label="商圈名称" prop="districtName">
-                    <el-input v-model="info.districtName"></el-input>
+            :close-on-click-modal="false" title="订单详情">
+            <el-form ref="orderInfo" v-loading="pageLoading" label-position="left" label-width="80px" :model="info">
+                <el-form-item label="订单id" prop="id">
+                    <el-input v-model="info.id" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="商圈简介" prop="briefIntroduction">
-                    <el-input v-model="info.briefIntroduction"></el-input>
+
+                <el-form-item label="用户真名" prop="nickName">
+                    <el-input v-model="info.nickName" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="商圈图标" prop="logo">
-                    <template v-if="info.logo">
-                        <div class="demo-image__preview">
-                            <el-image class="logoPanel"
-                                style="width: 150px; height: 150px"
-                                :src="info.logo" 
-                                :preview-src-list="showLogoUrl">
-                            </el-image>
-                        </div>
-                        <div class="delImg" @click="info.logo=''"><i class="el-icon-delete"></i></div>
-                    </template>
-                    <el-upload v-show="!info.logo" ref="uploadLogoForm" class='upload-demo' :multiple='false' :auto-upload='false' list-type='picture-card' :show-file-list='true'
-                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="1" :on-exceed="handleLogo"
-                        :on-change="getLogoFileList" :on-remove="getLogoFileList"
-                        :http-request="uploadLogo" accept=".jpg,.png,.jpeg" :file-list="logoUrl">
-                        <i class="el-icon-upload"></i>
-                    </el-upload>      
+
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="info.phone" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="商圈地址" prop="address">
-                    <el-input v-model="info.address"></el-input>
+
+                <el-form-item label="性别" prop="gender">
+                    <el-input v-model="info.gender" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="商家照片" prop="logo">
-                    <template v-show="info.shopListUrls.length>0">
-                        <div class="imageList" v-for="(item,index) in info.shopListUrls" :key="index">
-                            <el-image 
-                                style="width: 150px; height: 150px"
-                                :src="item" 
-                                :preview-src-list="info.shopListUrls">
-                            </el-image>
-                            <div class="delImg" @click="delShopImage(index)"><i class="el-icon-delete"></i></div>
-                        </div>
-                    </template>
-                    <el-upload v-show="6-info.shopListUrls.length>0" ref="uploadShopListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
-                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="6-info.shopListUrls.length" :on-exceed="handleLogo"
-                        :on-change="getShopListUrls" :on-remove="getShopListUrls"
-                        :http-request="uploadShopListUrls" accept=".jpg,.png,.jpeg" :file-list="shopListUrls">
-                        <i class="el-icon-upload"></i>
-                    </el-upload>
+
+                <el-form-item label="qq号" prop="qq">
+                    <el-input v-model="info.qq" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="商圈标签" prop="labels">
-                    <el-input v-model="info.labels"></el-input>
+
+                <el-form-item label="微信号" prop="weChat">
+                    <el-input v-model="info.weChat" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="优惠活动说明" prop="activityDesc">
-                    <el-input v-model="info.activityDesc"></el-input>
+
+                <el-form-item label="学历" prop="weeducationalBackgroundChat">
+                    <el-input v-model="info.educationalBackground" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="优惠标题" prop="activityTitle">
-                    <el-input v-model="info.activityTitle"></el-input>
+
+                <el-form-item label="年龄" prop="age">
+                    <el-input v-model="info.age" readonly></el-input>
+                </el-form-item>
+
+                <el-form-item label="身高" prop="stature">
+                    <el-input v-model="info.stature" readonly></el-input>
+                </el-form-item>
+
+                <el-form-item label="结婚状态" prop="marriedStatus">
+                    <el-input v-model="info.marriedStatus" readonly></el-input>
+                </el-form-item>
+
+                <el-form-item label="居住地" prop="area">
+                    <el-input v-model="info.area" readonly></el-input>
+                </el-form-item>
+
+                <el-form-item label="行业" prop="industry">
+                    <el-input v-model="info.industry" readonly></el-input>
+                </el-form-item>
+
+                <el-form-item label="月薪" prop="salary">
+                    <el-input v-model="info.salary" readonly></el-input>
+                </el-form-item>
+
+                <el-form-item label="支付状态" prop="flag">
+                    <el-input v-model="info.flag"></el-input>
+                </el-form-item>
+
+
+               <el-form-item label="商品价格" prop="price">
+                    <el-input v-model="info.price" readonly></el-input>
+                </el-form-item>
+
+                <el-form-item label="支付时间" prop="createTime">
+                    <el-input v-model="info.createTime" readonly></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogInfo.show = false">取 消</el-button>
-                <el-button type="primary" @click="saveInfo">确 定</el-button>
+                <el-button type="primary" @click="payRefund">退 款</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script>
-import {addOrUpdate,getBusinessDistrictById} from "../../api/api"
+import {payRefund,getOrderById} from "../../api/api"
 export default {
     props:{
         dialogInfo:{
@@ -80,228 +90,84 @@ export default {
         }
     },
     data(){
-        const validateString = (rule, value, callback) => {
-            if (value.split(" ").join("").length == 0) {
-                callback(new Error("不允许输入空字符"));
-            } else {
-                callback();
-            }
-        };
         return {
-            title: '编辑商圈信息',
             pageLoading: false,
             info:{
-                activityDesc:'',//string 优惠活动说明 非必填
-                activityTitle:'',//string 优惠标题 非必填
-                address:'',//string 商圈地址 必填
-                briefIntroduction:'',//	string 商圈简介 必填
-                districtName:'',//string 商圈名字 必填
-                flag:'',//string1 优惠广场 2. xxx 非必填
-                id:'',//string约会商圈id 添加不需要 更新需要 非必填
-                labels:'',//string 商圈的标签比如: 逛吃圣地;大众品牌 必填
-                logo:'',//string 商圈图标 必填
-                shopListUrls:[]
+                id:'',
+                nickName:'',
+                phone:'',
+                gender:'',
+                qq:'',
+                weChat:'',
+                educationalBackground:'',
+                age:0,
+                stature: 0,
+                marriedStatus: '',
+                area: '',
+                industry: '',
+                salary: 0,
+                flag: '',
+                price: 0.0,
+                createTime:''
+
             },
-            showLogoUrl :[],
-            logoUrl: [],
-            shopListUrls: [],
-            rules:{
-                districtName: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ],
-                briefIntroduction: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ],
-                activityDesc: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ],
-                activityTitle: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ],
-                address: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ],
-                labels: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ]
-            },
+
+        
         }
     },
     watch:{
     },
     methods:{
-        getLogoFileList(file, fileList){
-            this.logoUrl = fileList
-        },
-        getShopListUrls(file,fileList){
-            this.shopListUrls = fileList
-        },
-        // 上传文件之前的钩子
-        beforeUpload(file) {
-            //判断文件格式
-            let name = file.name
-            if (name.indexOf("png")<-1 && name.indexOf("jpg")<-1 && name.indexOf("jpeg")<-1) {
-                return false;
-            }
-        },
-        // 上传文件个数超过定义的数量
-        handleLogo(files, fileList) {
-            this.$message.warning(`当前限制选择 1 个文件，请删除后继续上传`)
-        },
-        clearLogoAllitems(){
-            this.logoUrl = []
-            this.$refs.uploadLogoForm.clearFiles()
-            this.$refs.uploadLogoForm.value=""
-        },
-        clearShopUrlAllitems(){
-            this.shopListUrls = []
-            this.$refs.uploadShopListUrlsForm.clearFiles()
-            this.$refs.uploadShopListUrlsForm.value=""
-        },
-        uploadLogo(){
-            if(this.logoUrl.length==0){
-                return ''
-            }
-            let that = this
-            return new Promise(function(resolve) {
-                let file = that.logoUrl[0].raw
-                const form = new FormData()// FormData 对象
-                form.append('file', file)
-                let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/upload"
-                axios({
-                    url: uploadUrl,
-                    data: form,
-                    method: 'post',
-                    // headers: {'x-auth-token': getToken()},
-                    contentType: "multipart/form-data",
-                    processData: false, //告诉jquery不要对form进行处理
-                    contentType: false, //指定为false才能形成正确的Content-Type
-                    async: false
-                }).then(res=>{
-                    if(res.data.errCode==200){
-                        resolve(res.data.data)
-                    }else{
-                        this.pageLoading = false
-                        that.$message("error","商圈图标文件上传失败，请仔细核对数据以及格式！")
-                        return ;
-                    }
-                })
-            })
-        },
-        uploadShopListUrls(){
-            if(this.shopListUrls.length==0){
-                return []
-            }
-            let that = this
-            return new Promise(function(resolve) {
-                const form = new FormData()// FormData 对象
-                that.shopListUrls.forEach(item=>{
-                    form.append('files', item.raw)
-                })
-                let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/uploadBatch"
-                axios({
-                    url: uploadUrl,
-                    data: form,
-                    method: 'post',
-                    // headers: {'x-auth-token': getToken()},
-                    contentType: "multipart/form-data",
-                    processData: false, //告诉jquery不要对form进行处理
-                    contentType: false, //指定为false才能形成正确的Content-Type
-                    async: false
-                }).then(res=>{
-                    if(res.data.errCode==200){
-                        resolve(res.data.data)
-                    }else{
-                        this.pageLoading = false
-                        that.$message("error","商家图标文件上传失败，请仔细核对数据以及格式！")
-                        return ;
-                    }
-                })
-            })
-        },
         openDialog(){   
-            if(this.dialogInfo.id){
-                this.getBusinessDistrictById()
-                this.title = "编辑商圈信息"
-            }else{
-                this.title = "添加商圈信息"
-            }
+          this.getOrderById()
         },
         closeDialog(){
-            this.showLogoUrl = []
-            this.$refs["editBusinessForm"].clearValidate();
-            this.clearLogoAllitems()
-            this.clearShopUrlAllitems()
-            this.showLogoUrl = []
-            this.info.activityDesc =''//string 优惠活动说明 非必填
-            this.info.activityTitle =''//string 优惠标题 非必填
-            this.info.address =''//string 商圈地址 必填
-            this.info.briefIntroduction =''//	string 商圈简介 必填
-            this.info.districtName =''//string 商圈名字 必填
-            this.info.flag =''//string1 优惠广场 2. xxx 非必填
-            this.info.id =''//string约会商圈id 添加不需要 更新需要 非必填
-            this.info.labels =''//string 商圈的标签比如 = 逛圣地;大众品牌 必填
-            this.info.logo =''//string 商圈图标 必填
-            this.info.shopListUrls =[]
+            this.$refs["orderInfo"].clearValidate();
+            this.info.id='',
+            this.info.nickName='',
+            this.info.phone='',
+            this.info.gender='',
+            this.info.qq='',
+            this.info.weChat='',
+            this.info.educationalBackground='',
+            this.info.age=0,
+            this.info.stature= 0,
+            this.info.marriedStatus= '',
+            this.info.area= '',
+            this.info.industry= '',
+            this.info.salary= 0,
+            this.info.flag= '',
+            this.info.price= 0.0,
+            this.info.createTime=''
             this.dialogInfo.show = false
         },
-        getBusinessDistrictById(){
+        getOrderById(){
             this.pageLoading = true
-            getBusinessDistrictById({id:this.dialogInfo.id}).then(res=>{
+            getOrderById({id:this.dialogInfo.id}).then(res=>{
                 if(res.errCode==200){
-                    this.info = res.data
-                    if(this.info.logo){
-                        this.showLogoUrl = [this.info.logo]
+                    this.info = res.data;
+                    let flag = res.data.flag;
+                    if(flag) {
+                        if(flag===1){
+                            this.info.flag = '已支付'
+                        } else if (flag == 2) {
+                            this.info.flag = '已退款'
+                        } else {
+                            this.info.flag = '未支付'
+                        }
                     }
                 }else{
-                    that.$message("error","获取商圈详情失败")
+                    that.$message("error","获取订单详情失败")
                 }
                 this.pageLoading = false
             })
         },
-        delShopImage(index){
-            this.info.shopListUrls.splice(index,1);
-        },
-        saveInfo(){
-            if(!this.info.logo && this.logoUrl.length==0){
-                this.$message("warning","必须上传商标以及商家图片信息")
-                return
-            }
-            if(this.info.shopListUrls.length==0 && this.shopListUrls.length==0){
-                this.$message("warning","必须上传商标以及商家图片信息")
-                return
-            }
-            this.$refs["editBusinessForm"].validate(valid => {
-                if (valid) {
-                    this.pageLoading = true
-                    const a = this.uploadLogo()
-                    const b = this.uploadShopListUrls()
-                    const c = Promise.all([a, b])
-                    let that = this
-                    c.then(function(val) {
-                        if(val[0]){
-                            that.info.logo = val[0]
-                        }
-                        that.info.shopListUrls = that.info.shopListUrls.concat(val[1])
-                        addOrUpdate(that.info).then(res=>{
-                            if(res.errCode==200){
-                                that.dialogInfo.show = false
-                                that.$emit("refresh")
-                                that.$message("success","保存商圈成功！")
-                            }else{
-                                that.$message("error","商家图标文件上传失败，请仔细核对数据以及格式！")
-                            }
-                            that.pageLoading = false
-                        })
-                    })
+        payRefund(){
+            payRefund({id:this.dialogInfo.id}).then(res=>{
+                if(res.errCode==200){
+                    this.info.flag = '已退款'
                 }else{
-                    this.$message("warning","请检查输入项");
+                    that.$message("error","退款失败")
                 }
             })
         }

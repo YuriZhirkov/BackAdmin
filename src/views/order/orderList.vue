@@ -7,10 +7,40 @@
       <el-col :span="3">
         <el-input type="text" v-model="searchQuery.phone" placeholder="用户电话" clearable />
       </el-col>
-      <el-col :span="4">
+
+      <el-col :span="3">
+          <el-select v-model="searchQuery.gender" placeholder="性别">
+              <el-option  v-for="item in genders"   :key="item.value"  :label="item.label"  :value="item.value">
+              </el-option>
+          </el-select>
+      </el-col>
+
+      <el-col :span="3">
         <el-input type="text" v-model="searchQuery.area" placeholder="用户居住地" clearable />
       </el-col>
-      <el-col :span="5">
+
+      <el-col :span="2">
+          <el-select v-model="searchQuery.flag" placeholder="支付状态">
+              <el-option  v-for="item in flags"   :key="item.value"  :label="item.label"  :value="item.value">
+              </el-option>
+          </el-select>
+      </el-col>
+
+      <el-col :span="2">
+        <el-input type="text" v-model="searchQuery.price" placeholder="支付金额" clearable />
+      </el-col>
+      
+    </el-row>
+
+    <el-row :gutter="5">
+
+      <el-col :span="3">
+          <el-select v-model="searchQuery.type" placeholder="商品类型">
+              <el-option  v-for="item in types"   :key="item.value"  :label="item.label"  :value="item.value">
+              </el-option>
+          </el-select>
+      </el-col>
+      <el-col :span="7">
         <el-date-picker
           v-model="searchQuery.date"
           type="daterange"
@@ -39,8 +69,9 @@
         <el-table-column prop="nickName" label="姓名"></el-table-column>
         <el-table-column prop="phone" label="手机" ></el-table-column>
         <el-table-column prop="gender" label="性别"></el-table-column>
-        <el-table-column prop="qq" label="qq号"></el-table-column>
-        <el-table-column prop="weChat" label="微信号" width="100"></el-table-column>
+        <el-table-column prop="area" label="地区"></el-table-column>
+        <el-table-column prop="price" label="金额" width="100"></el-table-column>
+        <el-table-column prop="flag" :formatter = "setFlag" label="支付状态"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="160"></el-table-column>
         <el-table-column prop="updateTime" label="更新时间" width="160"></el-table-column>
         <el-table-column label="操作" width="100">
@@ -51,7 +82,7 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="viewRow(scope.$index, scope.row)">编辑</el-dropdown-item>
+                <el-dropdown-item @click.native="viewRow(scope.$index, scope.row)">详情</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -83,8 +114,8 @@ export default {
       searchQuery: {
         realName:'',
         phone:'',
-        gender:null,
         area:'',
+        gender:'',
         flag:null,
         price:null,
         type:null,
@@ -92,6 +123,35 @@ export default {
         currPage: 1,
         pageSize: 10
       },
+      genders: [{
+          value: '男',
+          label: '男'
+        }, {
+          value: '女',
+          label: '女'
+      }],
+      flags: [{
+          value: 1,
+          label: '已支付'
+        }, {
+          value: 2,
+          label: '已退款'
+        },{
+          value: 0,
+          label: '未支付'
+        }
+      ],
+      types: [{
+          value: 1,
+          label: '会员'
+        }, {
+          value: 2,
+          label: '红娘'
+        },{
+          value: 3,
+          label: '活动'
+        }
+      ],
       dataList: [],
       total: 0,
       dialogInfo:{
@@ -109,6 +169,15 @@ export default {
     this.getList()
   },
   methods: {
+    setFlag(row, column) {
+      if (row.flag === 2) { 
+        return '已退款'
+      } else if (row.flag === 1) {
+        return '已支付'　　
+      } else {
+        return '未支付'
+      }
+    },
     getList(val){
       if(val==1){
         this.currPage = 1
@@ -123,7 +192,7 @@ export default {
       let params = {
         realName: this.searchQuery.realName,
         phone: this.searchQuery.phone,
-        gender: this.searchQuery.gender,
+        gender: this.gender,
         area: this.searchQuery.area,
         flag: this.searchQuery.flag,
         price: this.searchQuery.price,
@@ -134,11 +203,13 @@ export default {
         pageSize: this.searchQuery.pageSize
       }
       getOrderList(params).then(res=>{
+        debugger;
         if(res.errCode == 200){
-          if(res.total>0){
-            this.total = res.total
-            let data = res.data
-            this.dataList = data
+          let data = res.data;
+          if(data.total>0){
+            this.total = data.total
+            let dataRet = data.list
+            this.dataList = dataRet
           }else{
             this.total = 0
             this.dataList = []
