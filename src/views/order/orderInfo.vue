@@ -151,9 +151,9 @@ export default {
                     if(flag) {
                         if(flag===1){
                             this.info.flag = '已支付'
-                        } else if (flag == 2) {
+                        } else if (flag === 2) {
                             this.info.flag = '已退款'
-                        } else {
+                        } else if (flag === 0){
                             this.info.flag = '未支付'
                         }
                     }
