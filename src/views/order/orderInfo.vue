@@ -70,7 +70,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogInfo.show = false">取 消</el-button>
-                <el-button type="primary" @click="payRefund">退 款</el-button>
+                <el-button type="primary" @click="payRefund" v-if="info.flag=='已支付'">退 款</el-button>
             </span>
         </el-dialog>
     </div>
@@ -144,6 +144,7 @@ export default {
         getOrderById(){
             this.pageLoading = true
             getOrderById({id:this.dialogInfo.id}).then(res=>{
+                debugger
                 if(res.errCode==200){
                     this.info = res.data;
                     let flag = res.data.flag;
