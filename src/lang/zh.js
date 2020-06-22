@@ -23,7 +23,10 @@ const zh={
         permissionMenu:'菜单测试',
         permissionBtn:'按钮测试',
         '404':'404',
-        businessList:'商圈管理'
+        businessList:'商圈管理',
+        activity:'活动管理',
+        activityList:'活动列表',
+        activityAdd:'添加活动',
     },
     header:{
         fullScreen:'全屏',

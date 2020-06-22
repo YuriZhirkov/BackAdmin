@@ -123,5 +123,17 @@ export const menu = [
     icon: "el-icon-mobile-phone",
     index: "businessList",
     title: "businessList"
-  }
+  },
+  {
+    icon: "el-icon-bicycle",
+    index: "activity",
+    title: "activity",
+    subs: [
+      {
+        index: "activityList",
+        title: "activityList"
+      },
+     
+    ]
+  },
 ];

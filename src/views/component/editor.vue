@@ -1,9 +1,9 @@
 <template>
   <div class="editor-container">
-    <p class="expain">
+    <!-- <p class="expain">
       富文本编辑器是重要并且核心的功能，我们最终选择了vue2-editor，轻量高效，详细请见官方
       <a href="https://www.awesomes.cn/repo/davidroyer/vue2-editor" target="_blank">文档</a>
-    </p>
+    </p> -->
     <vue-editor id="editor" useCustomImageHandler @imageAdded="handleImageAdded" v-model="content"></vue-editor>
   </div>
 </template>
@@ -13,7 +13,7 @@ import {VueEditor} from "vue2-editor/dist/vue2-editor.core.js";
 export default {
   data() {
     return {
-      content: "<h1>你好，zyh</h1>"
+      content: "<h1>请输入..</h1>"
     };
   },
   components: {

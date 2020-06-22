@@ -60,3 +60,11 @@ export const  getOrderList=(params)=>post('/order/list',params).then(res=>res.da
 // 退单操作
 export const  payRefund=(params)=>get('/pay/refund',params).then(res=>res.data);
 
+//活动列表
+export const getActivityList=(params)=>post('activity/search',params).then(res=>res.data);
+
+//添加活动
+export const activityPublish=(params)=>post('activity/publish',params).then(res=>res.data);
+
+//获取活动的基本信息
+export const getBasicInfoActivity=(params)=>get('activity/getBasicInfo',params).then(res=>res.data);

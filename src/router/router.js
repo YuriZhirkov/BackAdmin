@@ -21,7 +21,9 @@ const myRouter = new Router({
         {
             path: '/home',
             component: getComponent('layout', 'Layout'),
-            children: [{
+            children: [
+                
+                {
                     path: '/home',
                     component: getComponent('home', 'index'),
                     meta: {
@@ -147,7 +149,21 @@ const myRouter = new Router({
                     meta: {
                         title: 'businessList'
                     }
-                }
+                },
+                {
+                    path:'/activityList',
+                    component:getComponent('activities','activityList'),
+                    meta:{
+                        title:'activityList',
+                    }
+                },
+                // {
+                //     path:'/activityAdd',
+                //     component:getComponent('activities','activityAdd'),
+                //     meta:{
+                //         title:'activityAdd',
+                //     }
+                // },
             ]
         }, {
             path: '*',
