@@ -446,6 +446,9 @@ export default {
                         if(val[0]){
                             that.info.activityPictureUrls = val[0]
                         }
+                        debugger;
+                        console.log('that.activityTime[0]=',that.activityTime[0]);
+                        console.log('that.activityTime[1]=',that.activityTime[1]);
                         that.info.activityStartTime=that.activityTime[0];//活动开始时间
                         that.info.activityEndTime=that.activityTime[1];//活动结束时间
                         activityPublish(that.info).then(res=>{
