@@ -9,7 +9,25 @@
                 <el-form-item label="活动简介:" prop="activityBriefIntroduction">
                     <el-input v-model="info.activityBriefIntroduction"></el-input>
                 </el-form-item>
-                <el-form-item label="活动图片(最多4张):" prop="activityPictureUrls">
+                  <el-form-item label="活动图片" prop="activityPictureUrls">
+                    <template v-show="info.activityPictureUrls.length>0">
+                        <div class="imageList" v-for="(item,index) in info.activityPictureUrls" :key="index">
+                            <el-image 
+                                style="width: 150px; height: 150px"
+                                :src="item" 
+                                :preview-src-list="info.activityPictureUrls">
+                            </el-image>
+                            <div class="delImg" @click="delShopImage(index)"><i class="el-icon-delete"></i></div>
+                        </div>
+                    </template>
+                    <el-upload v-show="6-info.activityPictureUrls.length>0" ref="uploadShopListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
+                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="6-info.activityPictureUrls.length" :on-exceed="handleLogo"
+                        :on-change="getShopListUrls" :on-remove="getShopListUrls"
+                        :http-request="uploadShopListUrls" accept=".jpg,.png,.jpeg" :file-list="shopListUrls">
+                        <i class="el-icon-upload"></i>
+                    </el-upload>
+                </el-form-item>
+                <!-- <el-form-item label="活动图片(最多4张):" prop="activityPictureUrls">
                     <template v-if="info.activityPictureUrls">
                         <div class="demo-image__preview">
                             <el-image class="logoPanel"
@@ -26,37 +44,24 @@
                         :http-request="uploadLogo" accept=".jpg,.png,.jpeg" :file-list="logoUrl">
                         <i class="el-icon-upload"></i>
                     </el-upload>      
-                </el-form-item>
-                <el-form-item label="活动金额(元):" prop="activityCost">
-                    <el-input v-model="info.activityCost"></el-input>
-                </el-form-item>
-                <!-- <el-form-item label="商家照片" prop="logo">
-                    <template v-show="info.shopListUrls.length>0">
-                        <div class="imageList" v-for="(item,index) in info.shopListUrls" :key="index">
-                            <el-image 
-                                style="width: 150px; height: 150px"
-                                :src="item" 
-                                :preview-src-list="info.shopListUrls">
-                            </el-image>
-                            <div class="delImg" @click="delShopImage(index)"><i class="el-icon-delete"></i></div>
-                        </div>
-                    </template>
-                    <el-upload v-show="6-info.shopListUrls.length>0" ref="uploadShopListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
-                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="6-info.shopListUrls.length" :on-exceed="handleLogo"
-                        :on-change="getShopListUrls" :on-remove="getShopListUrls"
-                        :http-request="uploadShopListUrls" accept=".jpg,.png,.jpeg" :file-list="shopListUrls">
-                        <i class="el-icon-upload"></i>
-                    </el-upload>
                 </el-form-item> -->
+                <el-form-item label="活动金额(元):" prop="activityCost">
+                    <el-input v-model="info.activityCost" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
+onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></el-input>
+                </el-form-item>
+              
                 <el-form-item label="活动总人数(个):" prop="activityJoinPerson">
-                    <el-input v-model="info.activityJoinPerson"></el-input>
+                    <el-input v-model="info.activityJoinPerson" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
+onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></el-input>
                 </el-form-item>
                 <el-form-item label="活动开始时间:" prop="activityTime">
                     <el-date-picker
-                      v-model="info.activityTime"
+                      v-model="activityTime"
                       type="datetimerange"
                       range-separator="至"
                       start-placeholder="开始日期"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      value-format="yyyy-MM-dd HH:mm:ss"
                       end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
@@ -94,7 +99,95 @@
 </template>
 <script>
 import {activityPublish,getActivityList,getBasicInfoActivity} from "../../api/api"
-import editor from "../component/editor"
+// import editor from "../component/editor"
+import VueHtml5Editor from 'vue-html5-editor'
+const options = {
+   visibleModules: [
+      "text",
+      "color",
+      "font",
+      // "image",
+      "hr",
+      "eraser",
+      "undo",
+      ],
+      // config image module
+      image: {
+          // 文件最大体积，单位字节  max file size
+          sizeLimit:1024 * 1024 *10,
+          // 上传参数,默认把图片转为base64而不上传
+          upload: {
+              url: 'https://www.ygtqzhang.cn/file/upload',
+              headers: {},
+              params: {},
+              fieldName:'file'
+          },
+          // 压缩参数,默认使用localResizeIMG进行压缩,设置为null禁止压缩
+          compress: {
+              width: 1000,
+              height: 1000,
+              quality: 80
+          },
+          // 响应数据处理,最终返回图片链接
+          uploadHandler(responseText){
+              var json = JSON.parse(responseText)
+              if (json.errCode != 200) {
+                  alert(json.errMsg)
+              } else {
+                  imgs.push(json.data)
+                  console.log(imgs);
+                  return json.data
+              }
+          }
+      },
+  language: "zh-cn",
+  i18n: {
+    "zh-cn": {
+      "align": "对齐方式",
+      "image": "图片",
+      "list": "列表",
+      "link": "链接",
+      "unlink": "去除链接",
+      "table": "表格",
+      "font": "文字",
+      "full screen": "全屏",
+      "text": "排版",
+      "eraser": "格式清除",
+      "info": "关于",
+      "color": "颜色",
+      "please enter a url": "请输入地址",
+      "create link": "创建链接",
+      "bold": "加粗",
+      "italic": "倾斜",
+      "underline": "下划线",
+      "strike through": "删除线",
+      "subscript": "上标",
+      "superscript": "下标",
+      "heading": "标题",
+      "font name": "字体",
+      "font size": "文字大小",
+      "left justify": "左对齐",
+      "center justify": "居中",
+      "right justify": "右对齐",
+      "ordered list": "有序列表",
+      "unordered list": "无序列表",
+      "fore color": "前景色",
+      "background color": "背景色",
+      "row count": "行数",
+      "column count": "列数",
+      "save": "确定",
+      "upload": "上传",
+      "progress": "进度",
+      "unknown": "未知",
+      "please wait": "请稍等",
+      "error": "错误",
+      "abort": "中断",
+      "reset": "重置"
+    }
+  }
+}
+
+const editor = new VueHtml5Editor(options)
 export default {
     components: {
         editor
@@ -135,7 +228,6 @@ export default {
                 activityBriefIntroduction:'',//string 活动简介 必填
                 activityCost:0,//	num 活动金额 必填
                 activityJoinPerson:0,//num 活动参与人数 必填
-                activityTime:[],//活动时间 必填
                 activityStartTime:'',//活动开始时间 必填
                 activityEndTime:'',//活动结束时间 必填
                 publishAddress:'',//活动发布地址
@@ -146,9 +238,11 @@ export default {
                 activityFeature:'',//string 活动特色
                 // shopListUrls:[]
             },
-            showLogoUrl :[],
-            logoUrl: [],
-            // shopListUrls: [],
+            activityTime:[],//活动时间 必填
+
+            // showLogoUrl :[],
+            // logoUrl: [],
+            shopListUrls: [],
             rules:{
                 activityTitle: [
                     { required: true, message: "必填", trigger: "blur" },
@@ -174,10 +268,10 @@ export default {
                     { required: true, message: "必填", trigger: "blur" },
                     { validator: validateString, trigger: "blur" }
                 ],
-                activityTime: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateArray, trigger: "blur" }
-                ],
+                // activityTime: [
+                //     { required: true, message: "必填", trigger: "blur" },
+                //     { validator: validateArray, trigger: "blur" }
+                // ],
                 activityDetails: [
                     { required: true, message: "必填", trigger: "blur" },
                     { validator: validateString, trigger: "blur" }
@@ -192,12 +286,12 @@ export default {
             console.log("有没有",e);
             this.info.activityDetails=e;
         },
-        getLogoFileList(file, fileList){
-            this.logoUrl = fileList
-        },
-        // getShopListUrls(file,fileList){
-        //     this.shopListUrls = fileList
+        // getLogoFileList(file, fileList){
+        //     this.logoUrl = fileList
         // },
+        getShopListUrls(file,fileList){
+            this.shopListUrls = fileList
+        },
         // 上传文件之前的钩子
         beforeUpload(file) {
             //判断文件格式
@@ -213,57 +307,29 @@ export default {
                  type: 'error'
             });
         },
-        clearLogoAllitems(){
-            this.logoUrl = []
-            this.$refs.uploadLogoForm.clearFiles()
-            this.$refs.uploadLogoForm.value=""
-        },
-        // clearShopUrlAllitems(){
-        //     this.shopListUrls = []
-        //     this.$refs.uploadShopListUrlsForm.clearFiles()
-        //     this.$refs.uploadShopListUrlsForm.value=""
+        // clearLogoAllitems(){
+        //     this.logoUrl = []
+        //     this.$refs.uploadLogoForm.clearFiles()
+        //     this.$refs.uploadLogoForm.value=""
         // },
-        uploadLogo(){
-            if(this.logoUrl.length==0){
-                return ''
-            }
-            let that = this
-            return new Promise(function(resolve) {
-                let file = that.logoUrl[0].raw
-                const form = new FormData()// FormData 对象
-                form.append('file', file)
-                let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/upload"
-                axios({
-                    url: uploadUrl,
-                    data: form,
-                    method: 'post',
-                    // headers: {'x-auth-token': getToken()},
-                    contentType: "multipart/form-data",
-                    processData: false, //告诉jquery不要对form进行处理
-                    contentType: false, //指定为false才能形成正确的Content-Type
-                    async: false
-                }).then(res=>{
-                    if(res.data.errCode==200){
-                        resolve(res.data.data)
-                    }else{
-                        this.pageLoading = false
-                        that.$message("error","活动图片文件上传失败，请仔细核对数据以及格式！")
-                        return ;
-                    }
-                })
-            })
+        clearShopUrlAllitems(){
+            this.shopListUrls = []
+            this.$refs.uploadShopListUrlsForm.clearFiles()
+            this.$refs.uploadShopListUrlsForm.value=""
         },
-        // uploadShopListUrls(){
-        //     if(this.shopListUrls.length==0){
-        //         return []
+        // uploadLogo(){
+        //     if(this.logoUrl.length==0){
+        //         return ''
         //     }
         //     let that = this
         //     return new Promise(function(resolve) {
+        //         // let file = that.logoUrl[0].raw
         //         const form = new FormData()// FormData 对象
-        //         that.shopListUrls.forEach(item=>{
-        //             form.append('files', item.raw)
+        //         // form.append('file', file)
+        //         that.logoUrl.forEach(item=>{
+        //             form.append('files', item.raw);
         //         })
-        //         let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/uploadBatch"
+        //         let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/upload"
         //         axios({
         //             url: uploadUrl,
         //             data: form,
@@ -278,12 +344,43 @@ export default {
         //                 resolve(res.data.data)
         //             }else{
         //                 this.pageLoading = false
-        //                 that.$message("error","商家图标文件上传失败，请仔细核对数据以及格式！")
+        //                 that.$message("error","活动图片文件上传失败，请仔细核对数据以及格式！")
         //                 return ;
         //             }
         //         })
         //     })
         // },
+        uploadShopListUrls(){
+            if(this.shopListUrls.length==0){
+                return []
+            }
+            let that = this
+            return new Promise(function(resolve) {
+                const form = new FormData()// FormData 对象
+                that.shopListUrls.forEach(item=>{
+                    form.append('files', item.raw)
+                })
+                let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/uploadBatch"
+                axios({
+                    url: uploadUrl,
+                    data: form,
+                    method: 'post',
+                    // headers: {'x-auth-token': getToken()},
+                    contentType: "multipart/form-data",
+                    processData: false, //告诉jquery不要对form进行处理
+                    contentType: false, //指定为false才能形成正确的Content-Type
+                    async: false
+                }).then(res=>{
+                    if(res.data.errCode==200){
+                        resolve(res.data.data)
+                    }else{
+                        this.pageLoading = false
+                        that.$message("error","商家图标文件上传失败，请仔细核对数据以及格式！")
+                        return ;
+                    }
+                })
+            })
+        },
         openDialog(){   
             if(this.dialogInfo.id){
                 this.getActivityList()
@@ -305,9 +402,9 @@ export default {
             this.info.activityFeature =''//string 商圈名字 必填
             this.info.activityTitle =''//string1 优惠广场 2. xxx 非必填
             this.info.activityBriefIntroduction =''//string约会商圈id 添加不需要 更新需要 非必填
-            this.info.activityCost =''//string 商圈的标签比如 = 逛圣地;大众品牌 必填
-            this.info.activityJoinPerson =''//string 商圈图标 必填
-            this.info.activityTime=[],
+            this.info.activityCost =0//string 商圈的标签比如 = 逛圣地;大众品牌 必填
+            this.info.activityJoinPerson =0//string 商圈图标 必填
+            this.activityTime=[],
             this.info.publishAddress='',
             this.dialogInfo.show = false
         },
@@ -321,16 +418,16 @@ export default {
                     }
                 }else{
                     let that=this;
-                    that.$message("error","获取商圈详情失败")
+                    that.$message("error","获取活动详情失败")
                 }
                 this.pageLoading = false
             })
         },
-        // delShopImage(index){
-        //     this.info.shopListUrls.splice(index,1);
-        // },
+        delShopImage(index){
+            this.info.activityPictureUrls.splice(index,1);
+        },
         saveInfo(){
-            if(!this.info.activityPictureUrls && this.logoUrl.length==0){
+            if(!this.info.activityPictureUrls && this.shopListUrls.length==0){
                 this.$message("warning","必须上传活动图片");
                 return
             }
@@ -341,16 +438,16 @@ export default {
             this.$refs["editActivityForm"].validate(valid => {
                 if (valid) {
                     this.pageLoading = true
-                    const a = this.uploadLogo()
-                    // const b = this.uploadShopListUrls()
-                    const c = Promise.all([a, b])
+                    // const a = this.uploadLogo()
+                    const b = this.uploadShopListUrls()
+                    const c = Promise.all([b]);
                     let that = this
                     c.then(function(val) {
                         if(val[0]){
                             that.info.activityPictureUrls = val[0]
                         }
-                        that.info.activityStartTime=that.info.activityTime[0];//活动开始时间
-                        that.info.activityEndTime=that.info.activityTime[1];//活动结束时间
+                        that.info.activityStartTime=that.activityTime[0];//活动开始时间
+                        that.info.activityEndTime=that.activityTime[1];//活动结束时间
                         activityPublish(that.info).then(res=>{
                             if(res.errCode==200){
                                 that.dialogInfo.show = false

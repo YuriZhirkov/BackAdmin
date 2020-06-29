@@ -21,6 +21,7 @@
     "vue": "^2.6.11",
     "vue-clipboard2": "^0.3.0",
     "vue-count-to": "^1.0.13",
+    "vue-html5-editor": "^1.1.1",
     "vue-i18n": "^8.15.5",
     "vue-json-viewer": "^2.2.8",
     "vue-particles": "^1.0.9",
