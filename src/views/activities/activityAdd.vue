@@ -46,13 +46,11 @@
                     </el-upload>      
                 </el-form-item> -->
                 <el-form-item label="活动金额(元):" prop="activityCost">
-                    <el-input v-model="info.activityCost" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
-onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></el-input>
+                    <el-input v-model.number="info.activityCost"></el-input>
                 </el-form-item>
               
                 <el-form-item label="活动总人数(个):" prop="activityJoinPerson">
-                    <el-input v-model="info.activityJoinPerson" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" 
-onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"></el-input>
+                    <el-input v-model.number="info.activityJoinPerson"></el-input>
                 </el-form-item>
                 <el-form-item label="活动开始时间:" prop="activityTime">
                     <el-date-picker
@@ -237,6 +235,7 @@ export default {
                 activityTips:'',//string 活动提示 必填
                 activitySpecification:'',//string 活动说明 必填
                 activityFeature:'',//string 活动特色
+                userId:sessionStorage.getItem("userId")
                 // shopListUrls:[]
             },
             activityTime:[],//活动时间 必填
@@ -273,6 +272,9 @@ export default {
                 ]
             },
         }
+    },
+    created() {
+        // console.log('this.$store = ',this.$store.state.userId) ;
     },
     watch:{
     },
@@ -370,7 +372,7 @@ export default {
                         resolve(res.data.data)
                     }else{
                         this.pageLoading = false
-                        that.$message("error","商家图标文件上传失败，请仔细核对数据以及格式！")
+                        that.$message("添加失败！")
                         return ;
                     }
                 })
@@ -422,6 +424,7 @@ export default {
             this.info.activityPictureUrls.splice(index,1);
         },
         saveInfo(){
+            console.info("that.info)", this.info)
             if(!this.info.activityPictureUrls && this.shopListUrls.length==0){
                 this.$message("warning","必须上传活动图片");
                 return
@@ -441,7 +444,6 @@ export default {
                         if(val[0]){
                             that.info.activityPictureUrls = val[0]
                         }
-                        debugger;
                         console.log('that.activityTime[0]=',that.activityTime[0]);
                         console.log('that.activityTime[1]=',that.activityTime[1]);
                         that.info.activityStartTime=that.activityTime[0];//活动开始时间

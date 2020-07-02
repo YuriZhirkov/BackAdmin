@@ -169,6 +169,7 @@ export default {
           }
           register(params).then(res => {
                that.$store.commit("COMMIT_USERID",res.data);
+               sessionStorage.setItem("userId", res.data)
               if(res.errCode==200){
                 that.$router.push({
                   path: "/home"

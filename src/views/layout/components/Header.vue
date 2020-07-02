@@ -87,7 +87,7 @@ export default {
     getInfo(){
        let that=this;
        let params={};
-        params.userId = this.$store.state.userId;
+        params.userId = sessionStorage.getItem("userId");
         getUserInfo(params).then(res => {
               
               if(res.errCode==200){
