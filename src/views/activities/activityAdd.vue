@@ -3,8 +3,8 @@
         <el-dialog :visible="dialogInfo.show" width="80%" @close="closeDialog" @open="openDialog"
             :close-on-click-modal="false" :title="title">
             <el-form ref="editActivityForm" v-loading="pageLoading" label-position="left" label-width="15cnpm0px" :rules="rules" :model="info">
-                <el-form-item label="活动标题:" prop="activityTitle">
-                    <el-input v-model="info.activityTitle"></el-input>
+                <el-form-item label="活动标题:" prop="activityTheme">
+                    <el-input v-model="info.activityTheme"></el-input>
                 </el-form-item>
                 <el-form-item label="活动简介:" prop="activityBriefIntroduction">
                     <el-input v-model="info.activityBriefIntroduction"></el-input>
