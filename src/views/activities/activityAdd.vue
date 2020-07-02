@@ -204,6 +204,7 @@ export default {
         }
     },
     data(){
+        //console.log('this.$store = ',this.$store.state.userId) ;
         const validateString = (rule, value, callback) => {
             if (value.split(" ").join("").length == 0) {
                 callback(new Error("不允许输入空字符"));
@@ -226,7 +227,7 @@ export default {
                 activitySpecification:'',//string 活动说明 必填
                 activityTitle:'',//string 活动标题 必填
                 activityBriefIntroduction:'',//string 活动简介 必填
-                activityCost:0,//	num 活动金额 必填
+                activityCost:0.0,//	num 活动金额 必填
                 activityJoinPerson:0,//num 活动参与人数 必填
                 activityStartTime:'',//活动开始时间 必填
                 activityEndTime:'',//活动结束时间 必填
@@ -248,19 +249,13 @@ export default {
                     { required: true, message: "必填", trigger: "blur" },
                     { validator: validateString, trigger: "blur" }
                 ],
-                activityCost: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ],
+                
                 activityBriefIntroduction: [
                     { required: true, message: "必填", trigger: "blur" },
                     { validator: validateString, trigger: "blur" }
                 ],
-                activityJoinPerson: [
-                    { required: true, message: "必填", trigger: "blur" },
-                    { validator: validateString, trigger: "blur" }
-                ],
-                 publishAddress: [
+                
+                publishAddress: [
                     { required: true, message: "必填", trigger: "blur" },
                     { validator: validateString, trigger: "blur" }
                 ],
@@ -402,8 +397,8 @@ export default {
             this.info.activityFeature =''//string 商圈名字 必填
             this.info.activityTitle =''//string1 优惠广场 2. xxx 非必填
             this.info.activityBriefIntroduction =''//string约会商圈id 添加不需要 更新需要 非必填
-            this.info.activityCost =0//string 商圈的标签比如 = 逛圣地;大众品牌 必填
-            this.info.activityJoinPerson =0//string 商圈图标 必填
+            this.info.activityCost =0.0//Double 商圈的标签比如 = 逛圣地;大众品牌 必填
+            this.info.activityJoinPerson =0//Integer 商圈图标 必填
             this.activityTime=[],
             this.info.publishAddress='',
             this.dialogInfo.show = false
