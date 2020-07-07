@@ -46,7 +46,7 @@ export const  searchBusinessDistrict=(params)=>post('/dateBusinessDistrict/searc
 export const  addOrUpdate=(params)=>post('/dateBusinessDistrict/addOrUpdate',params).then(res=>res.data);
 
 // 删除商圈
-export const  deleteBusinessDistrict=(params)=>get('/dateBusinessDistrict/deleteBusinessDistrictById',params).then(res=>res.data);
+export const  deleteBusinessDistrict=(params)=>post('/dateBusinessDistrict/deleteBusinessDistrictById',params).then(res=>res.data);
 
 // 根据id查询商圈详情
 export const  getBusinessDistrictById=(params)=>get('/dateBusinessDistrict/getBusinessDistrictById',params).then(res=>res.data);
@@ -68,3 +68,6 @@ export const activityPublish=(params)=>post('activity/publish',params).then(res=
 
 //获取活动的基本信息
 export const getBasicInfoActivity=(params)=>get('activity/getBasicInfo',params).then(res=>res.data);
+
+
+export const deteleActivity=(params)=>post('activity/delete',params).then(res=>res.data);

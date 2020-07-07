@@ -61,7 +61,6 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="viewRow(scope.$index, scope.row)">编辑</el-dropdown-item>
                 <el-dropdown-item @click.native="delRow(scope.$index, scope.row)">删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -82,7 +81,7 @@
   </div>
 </template>
 <script>
-import {getActivityList,deleteBusinessDistrict} from "../../api/api"
+import {getActivityList,deteleActivity} from "../../api/api"
 import activityAdd from "./activityAdd";
 export default {
   components: {
@@ -163,15 +162,11 @@ export default {
       this.searchQuery.pageSize = 10
     },
     delRow(index,row){
-        this.$confirm('是否确定删除此条信息', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消'
-        }).then(() => {
-          this.pageLoading = true
-          let params = {
-            id: row.id
+        let params = {
+            id: row.id,
+            userId:sessionStorage.getItem("userId")
           }
-          deleteBusinessDistrict(params).then(res=>{
+          deteleActivity(params).then(res=>{
             this.pageLoading = false
             if(res.errCode == 200){
             this.$message("success",'删除成功！')
@@ -180,7 +175,6 @@ export default {
             this.$message("error",'删除失败！')
             }
           })
-        }).catch(() => {})
     },
     viewRow(index,row){
       this.dialogInfo.id = row.id

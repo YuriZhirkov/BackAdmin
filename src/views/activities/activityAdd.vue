@@ -3,8 +3,8 @@
         <el-dialog :visible="dialogInfo.show" width="80%" @close="closeDialog" @open="openDialog"
             :close-on-click-modal="false" :title="title">
             <el-form ref="editActivityForm" v-loading="pageLoading" label-position="left" label-width="15cnpm0px" :rules="rules" :model="info">
-                <el-form-item label="活动标题:" prop="activityTitle">
-                    <el-input v-model="info.activityTitle"></el-input>
+                <el-form-item label="活动标题:" prop="activityTheme">
+                    <el-input v-model="info.activityTheme"></el-input>
                 </el-form-item>
                 <el-form-item label="活动简介:" prop="activityBriefIntroduction">
                     <el-input v-model="info.activityBriefIntroduction"></el-input>
@@ -63,9 +63,6 @@
                       end-placeholder="结束日期">
                     </el-date-picker>
                 </el-form-item>
-                <!-- <el-form-item label="活动结束时间:" prop="activityEndTime">
-                    <el-input v-model="info.activityEndTime"></el-input>
-                </el-form-item> -->
                 <el-form-item label="发布地址:" prop="publishAddress">
                     <el-input v-model="info.publishAddress"></el-input>
                 </el-form-item>
@@ -221,21 +218,21 @@ export default {
             title: '编辑活动信息',
             pageLoading: false,
             info:{
-                activityPictureUrls:'',//活动图片 必填
-                activitySpecification:'',//string 活动说明 必填
+                activityPictureUrls:'',//图片的地址 必填
+                activitySpecification:'',//活动说明 必填
                 activityTitle:'',//string 活动标题 必填
-                activityBriefIntroduction:'',//string 活动简介 必填
-                activityCost:0.0,//	num 活动金额 必填
-                activityJoinPerson:0,//num 活动参与人数 必填
+                activityBriefIntroduction:'',//活动简介 必须
+                activityCost:0.0,//	参与活动的费用 必填
+                activityJoinPerson:0,//参加活动的总人数，男生参加的人数不得高于平均值 必填
                 activityStartTime:'',//活动开始时间 必填
+                activityTheme:'',//活动主题 必填
                 activityEndTime:'',//活动结束时间 必填
-                publishAddress:'',//活动发布地址
-                activityAddress:'',//活动发布地址
-                activityDetails:'',//string 活动详情 必填
-                activityTips:'',//string 活动提示 必填
-                activitySpecification:'',//string 活动说明 必填
-                activityFeature:'',//string 活动特色
-                userId:sessionStorage.getItem("userId")
+                publishAddress:'',//发布地用于搜索 必填
+                activityAddress:'',//活动地址 必须
+                activityDetails:'',//活动详情 必填
+                activityTips:'',//活动提示 非必填
+                activityFeature:'',//活动特色 非必须
+                userId:sessionStorage.getItem("userId")  //活动的发布人 必须
                 // shopListUrls:[]
             },
             activityTime:[],//活动时间 必填
@@ -262,10 +259,6 @@ export default {
                     { required: true, message: "必填", trigger: "blur" },
                     { validator: validateString, trigger: "blur" }
                 ],
-                // activityTime: [
-                //     { required: true, message: "必填", trigger: "blur" },
-                //     { validator: validateArray, trigger: "blur" }
-                // ],
                 activityDetails: [
                     { required: true, message: "必填", trigger: "blur" },
                     { validator: validateString, trigger: "blur" }
@@ -392,18 +385,20 @@ export default {
             this.clearLogoAllitems()
             // this.clearShopUrlAllitems()
             // this.showLogoUrl = []
-            this.info.activitySpecification =''//string 优惠活动说明 非必填
-            this.info.activityAddress =''//string 优惠标题 非必填
-            this.info.activityDetails =''//string 商圈地址 必填
-            this.info.activityTips =''//	string 商圈简介 必填
-            this.info.activityFeature =''//string 商圈名字 必填
+            this.info.activitySpecification =''//活动说明 必填
+            this.info.activityAddress =''//活动地址 必须
+            this.info.activityDetails =''//活动详情 必填
+            this.info.activityTips =''//	活动提示 非必填
+            this.info.activityFeature =''//活动特色 非必须
             this.info.activityTitle =''//string1 优惠广场 2. xxx 非必填
-            this.info.activityBriefIntroduction =''//string约会商圈id 添加不需要 更新需要 非必填
-            this.info.activityCost =0.0//Double 商圈的标签比如 = 逛圣地;大众品牌 必填
-            this.info.activityJoinPerson =0//Integer 商圈图标 必填
+            this.info.activityBriefIntroduction =''//活动简介 必须
+            this.info.activityCost =0.0//参与活动的费用 必须
+            this.info.activityJoinPerson =0//参加活动的总人数，男生参加的人数不得高于平均值 必填
             this.activityTime=[],
-            this.info.publishAddress='',
-            this.dialogInfo.show = false
+            this.activityTheme='',//活动主题 必填
+            this.info.publishAddress='',//发布地用于搜索 必填
+            this.dialogInfo.show = false,
+            this.userId=sessionStorage.getItem("userId")  //活动的发布人 必须
         },
         getActivityList(){
             this.pageLoading = true
@@ -446,8 +441,8 @@ export default {
                         }
                         console.log('that.activityTime[0]=',that.activityTime[0]);
                         console.log('that.activityTime[1]=',that.activityTime[1]);
-                        that.info.activityStartTime=that.activityTime[0];//活动开始时间
-                        that.info.activityEndTime=that.activityTime[1];//活动结束时间
+                        that.info.activityStartTime=that.activityTime[0];//活动开始时间 必填
+                        that.info.activityEndTime=that.activityTime[1];//活动结束时间 必填
                         activityPublish(that.info).then(res=>{
                             if(res.errCode==200){
                                 that.dialogInfo.show = false
