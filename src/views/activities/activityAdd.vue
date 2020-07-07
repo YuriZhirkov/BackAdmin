@@ -293,7 +293,7 @@ export default {
         beforeUpload(file) {
             //判断文件格式
             let name = file.name
-            if (name.indexOf("png")<-1 && name.indexOf("jpg")<-1 && name.indexOf("jpeg")<-1) {
+            if (name.indexOf("png")==-1 || name.indexOf("jpg")==-1 || name.indexOf("jpeg")==-1) {
                 return false;
             }
         },
