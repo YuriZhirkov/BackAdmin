@@ -99,6 +99,7 @@
     <el-row :gutter="40" >
         <el-button type="primary" size="small" class="chaXunButton" @click="searchUserInfo">查询</el-button>
         <el-button type="primary" size="small" class="chaXunButton" @click="reset">重置</el-button>
+        <el-button type="primary" size="small" class="chaXunButton" @click="addNewUser">新增用户</el-button>
     </el-row>
     <el-row :gutter="40">
         <el-table
@@ -201,9 +202,16 @@
                   <el-button type="primary" size="small"
                       @click="generateZXing(scope.row.userId)" v-if="!scope.row.zxingUrl">生成二维码
                 </el-button>
+                
             </template>         
         </el-table-column>
-
+        <el-table-column prop="look" label="查看" min-width="120%" align='center'>
+            <template   slot-scope="scope">            
+                  <el-button type="primary" size="small"
+                      @click="lookInfo(scope.row.userId)">查看
+                </el-button>
+            </template>         
+        </el-table-column>
       </el-table>
     </el-row>
     <el-row :gutter="40" class="userListPagination">
@@ -313,6 +321,85 @@
         <el-button type="primary" @click="authentication(2)">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 弹出框  新增用户信息-->
+    <el-dialog title="新增用户信息" :visible.sync="dialogFormVisibleAddUserInfo">
+      <div class="formWrap">
+        <el-form :model="formAddUserInfo" label-position="left">
+          <!-- <el-form-item>
+            <p class="lineSpan">
+              <span>头像:</span>
+              <img :src="formAddUserInfo.headUrl"  min-width="70" height="70" @error="formAddUserInfo.headUrl=''" v-if="formAddUserInfo.headUrl"/>
+            </p>
+          </el-form-item> -->
+          <el-form-item label="头像" prop="headUrl">
+                    <template v-if="formAddUserInfo.headUrl">
+                        <div style="text-align:center">
+                            <el-image class="logoPanel"
+                               style="width: 150px; height: 150px"
+                                :src="formAddUserInfo.headUrl" 
+                                :preview-src-list="showLogoUrl">
+                            </el-image>
+                        </div>
+                        <div class="delImg" @click="formAddUserInfo.headUrl=''"><i class="el-icon-delete"></i></div>
+                    </template>
+                    <el-upload v-show="!formAddUserInfo.headUrl" ref="uploadLogoForm" class='upload-demo' :multiple='false' :auto-upload='false' list-type='picture-card' :show-file-list='true'
+                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="1" :on-exceed="handleLogo"
+                        :on-change="getLogoFileList" :on-remove="clearLogoAllitems"
+                        :http-request="uploadLogo" accept=".jpg,.png,.jpeg" :file-list="logoUrl">
+                        <i class="el-icon-upload"></i>
+                    </el-upload>      
+                </el-form-item>
+          <el-form-item>   
+            <p class="lineSpan"><span>姓名:</span><span><el-input v-model="formAddUserInfo.realName"></el-input></span></p>
+            <p class="lineSpan"><span>性别:</span><span><el-input v-model="formAddUserInfo.gender"></el-input></span></p>
+            <p class="lineSpan"><span>年龄:</span><span><el-input v-model="formAddUserInfo.age"></el-input></span></p>
+            <p class="lineSpan"><span>体重:</span><span><el-input v-model="formAddUserInfo.weight"></el-input></span><span class="leftMargin">公斤</span></p>
+            <p class="lineSpan"><span>身高:</span><span><el-input v-model="formAddUserInfo.stature"></el-input></span><span class="leftMargin">cm</span></p>
+            <p class="lineSpan"><span>婚姻状态:</span><span><el-input v-model="formAddUserInfo.marriedStatus"></el-input></span></p>
+            <p class="lineSpan"><span>老家所在地:</span><span><el-input v-model="formAddUserInfo.nativePlace"></el-input></span></p>
+            <p class="lineSpan"><span>现居生活地:</span><span><el-input v-model="formAddUserInfo.area" placeholder="XX省 XX市"></el-input></span></p>
+            <p class="lineSpan"><span>学历:</span><span><el-input v-model="formAddUserInfo.educationalBackground"></el-input></span></p>
+            <p class="lineSpan"><span>公司名:</span><span><el-input v-model="formAddUserInfo.company"></el-input></span></p>            
+            <p class="lineSpan"><span>心动对象:</span><span><el-input v-model="formAddUserInfo.heartBeatObject"></el-input></span></p>
+            <p class="lineSpan"><span>微信号:</span><span><el-input v-model="formAddUserInfo.weChat"></el-input></span></p>
+            <p class="lineSpan"><span>qq号:</span><span><el-input v-model="formAddUserInfo.qq"></el-input></span></p>
+            <p class="lineSpan"><span>手机:</span><span><el-input v-model="formAddUserInfo.phone"></el-input></span></p>
+            <p class="lineSpan"><span>月薪:</span><span><el-input v-model="formAddUserInfo.salary"></el-input></span><span class="leftMargin">元</span></p>
+            <p class="lineSpan"><span>毕业学校:</span><span><el-input v-model="formAddUserInfo.schoolName"></el-input></span></p>
+            <p class="lineSpan"><span>自我介绍:</span><span><el-input v-model="formAddUserInfo.selfIntroduction"></el-input></span></p>
+            <p class="lineSpan"><span>操作人:</span><span><el-input v-model="formAddUserInfo.opId"></el-input></span></p>
+            <p class="lineSpan"><span>个人生活照:</span>
+            <template v-show="formAddUserInfo.otherUrls.length>0">
+                        <div class="imageList" v-for="(item,index) in formAddUserInfo.otherUrls" :key="index">
+                            <el-image 
+                               style="width: 100px; height: 100px"
+                                :src="item" 
+                                :preview-src-list="formAddUserInfo.otherUrls">
+                            </el-image>
+                            <div class="delImg" @click="delPersonImage(index)"><i class="el-icon-delete"></i></div>
+                        </div>
+                    </template>
+                    <el-upload v-show="4-formAddUserInfo.otherUrls.length>0" ref="uploadPersonListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
+                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="4-formAddUserInfo.otherUrls.length" :on-exceed="handleLogo"
+                        :on-change="getPersonListUrls" :on-remove="clearPersonUrlAllitems"
+                        :http-request="uploadPersonListUrls" accept=".jpg,.png,.jpeg" :file-list="PersonListUrls">
+                        <i class="el-icon-upload"></i>
+                    </el-upload>
+            </p>
+
+          </el-form-item>
+          <!-- <el-form-item>
+                    
+                      
+            </el-form-item> -->
+
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibleAddUserInfo = false">取 消</el-button>
+        <el-button type="primary" @click="addNewUserInfo()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -322,7 +409,9 @@ import {
   getIdentityAuthentication,
   authentication,
   getEducationBackgroundAuthentication,
-  generateZXing
+  generateZXing,
+  userBaseInfoAdd,
+  getUserInfoDetail
 } from "@api";
 import { exists } from "fs";
 export default {
@@ -349,6 +438,7 @@ export default {
       pageNumber: 1,
       dialogFormVisibleIdentity: false,
       dialogFormVisibleEducationBackground: false,
+      dialogFormVisibleAddUserInfo:false,
       flag: null,
       formIdentity: {
         userId: null,
@@ -375,6 +465,29 @@ export default {
         schoolName: null,
         educationalFlag: null
       },
+      formAddUserInfo:{
+        age: 12,
+	      area: "湖北省 荆州市",
+	      company: "前哨基地",
+	      educationalBackground: "哈士奇",
+	      gender: "男",
+	      headUrl: "http://ygtqzhang.cn/ygtqpro/20200213022105/3c92bfb918bb405ca28fc5eab86d2fb5.jpeg",
+	      heartBeatObject: "哈士奇",
+	      marriedStatus: "未婚",
+	      nativePlace: "湖北省 荆州市",
+	      opId: "1238766921491542017",
+	      otherUrls: [],
+	      phone: "15818734678",
+	      qq: "2444444422",
+	      realName: "张志饿",
+	      salary: 100,
+	      schoolName: "哈弗",
+	      selfIntroduction: "点对点",
+	      stature: 134,
+	      userId: "",
+	      weChat: "zzzg345",
+	      weight: 12
+      },
       msg: ""
     };
   },
@@ -387,23 +500,146 @@ export default {
     window.onresize = null;
   },
   methods: {
-    statistics() {
-      let that = this;
-      userStatistics()
-        .then(res => {
-          if (res.errCode == 200) {
-            let backUserStatisticsOutput = res.data;
-            that.userNum = backUserStatisticsOutput.userNum;
-            that.userNumOnLine = backUserStatisticsOutput.userNumOnLine;
-            that.userNumMember = backUserStatisticsOutput.userNumMember;
-          } else {
-            that.$message("error", res.errMsg);
-          }
-        })
-        .catch(err => {
-          this.$message("error", err.errMsg);
-        });
+    
+    //新增用户
+    addNewUser(){
+      let that=this;
+      that.dialogFormVisibleAddUserInfo=true;
     },
+    //查看用户信息
+    lookInfo(val){
+      console.log("ws");
+      let that = this;
+      let params = {};
+      params.userId = val;
+      getUserInfoDetail(params).then(res=>{
+        console.log(res);
+      })
+    },
+    //点击新增用户的框的确定
+    addNewUserInfo(){
+      let that=this;
+      let params={};
+      params=that.formAddUserInfo;
+      userBaseInfoAdd(params).then(res=>{
+            console.log(res);
+      })
+    },
+     // 上传文件个数超过定义的数量
+    handleLogo(files, fileList) {
+            this.$message({
+                 message: '当前限制选择 4 个文件，请删除后继续上传',
+                 type: 'error'
+            });
+    },
+    // 上传文件之前的钩子
+      beforeUpload(file) {
+          //判断文件格式
+          let name = file.name
+          if (name.indexOf("png")<-1 && name.indexOf("jpg")<-1 && name.indexOf("jpeg")<-1) {
+              return false;
+          }
+      },
+      //获取头像照片
+      getLogoFileList(file, fileList){
+        console.log("ces",file,fileList);
+          this.formAddUserInfo.headUrl = fileList.url;
+      },
+      //获取生活照片
+      getPersonListUrls(file, fileList){
+          this.formAddUserInfo.otherUrls = fileList
+      },
+      delPersonImage(index){
+             this.formAddUserInfo.otherUrls.splice(index,1);
+        },
+        clearLogoAllitems(){
+            this.formAddUserInfo.headUrl = "";
+            this.$refs.uploadLogoForm.clearFiles();
+            this.$refs.uploadLogoForm.value="";
+        },
+        clearPersonUrlAllitems(){
+            this.formAddUserInfo.otherUrls = []
+            this.$refs.uploadPersonListUrlsForm.clearFiles()
+            this.$refs.uploadPersonListUrlsForm.value=""
+        },
+        uploadLogo(){
+            if(this.logoUrl.length==0){
+                return ''
+            }
+            let that = this
+            return new Promise(function(resolve) {
+                let file = that.formAddUserInfo.headUrl[0].raw
+                const form = new FormData()// FormData 对象
+                form.append('file', file)
+                let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/upload"
+                axios({
+                    url: uploadUrl,
+                    data: form,
+                    method: 'post',
+                    // headers: {'x-auth-token': getToken()},
+                    contentType: "multipart/form-data",
+                    processData: false, //告诉jquery不要对form进行处理
+                    contentType: false, //指定为false才能形成正确的Content-Type
+                    async: false
+                }).then(res=>{
+                    if(res.data.errCode==200){
+                        resolve(res.data.data)
+                    }else{
+                        this.pageLoading = false
+                        that.$message("error","头像上传失败，请仔细核对数据以及格式！")
+                        return ;
+                    }
+                })
+            })
+        },
+        uploadPersonListUrls(){
+            if(this.formAddUserInfo.otherUrls.length==0){
+                return []
+            }
+            let that = this
+            return new Promise(function(resolve) {
+                const form = new FormData()// FormData 对象
+                that.formAddUserInfo.otherUrls.forEach(item=>{
+                    form.append('files', item.raw)
+                })
+                let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/uploadBatch"
+                axios({
+                    url: uploadUrl,
+                    data: form,
+                    method: 'post',
+                    // headers: {'x-auth-token': getToken()},
+                    contentType: "multipart/form-data",
+                    processData: false, //告诉jquery不要对form进行处理
+                    contentType: false, //指定为false才能形成正确的Content-Type
+                    async: false
+                }).then(res=>{
+                    if(res.data.errCode==200){
+                        resolve(res.data.data)
+                    }else{
+                        this.pageLoading = false
+                        that.$message("error","个人照片上传失败，请仔细核对数据以及格式！")
+                        return ;
+                    }
+                })
+            })
+        },
+      statistics() {
+       let that = this;
+       userStatistics()
+         .then(res => {
+           if (res.errCode == 200) {
+             let backUserStatisticsOutput = res.data;
+             that.userNum = backUserStatisticsOutput.userNum;
+             that.userNumOnLine = backUserStatisticsOutput.userNumOnLine;
+             that.userNumMember = backUserStatisticsOutput.userNumMember;
+           } else {
+             that.$message("error", res.errMsg);
+           }
+         })
+         .catch(err => {
+           this.$message("error", err.errMsg);
+         });
+     },
 
     baseInfoZXing() {
       let that = this;
@@ -713,8 +949,13 @@ export default {
       span:first-child {
         margin-right: 10px;
       }
+      .leftMargin{
+      padding-left:20px;
     }
+    }
+    
   }
+ 
 }
 </style>
 

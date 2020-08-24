@@ -31,6 +31,8 @@ export const  getIdentityAuthentication=(params)=>get('/back/user/getIdentityAut
 //5. 获取用户的学历信息
 export const  getEducationBackgroundAuthentication=(params)=>get('/back/user/getEducationBackgroundAuthentication',params).then(res=>res.data);
 
+//6. 查看用户信息
+export const  getUserInfoDetail=(params)=>get('/back/user/baseInfo/getBack',params).then(res=>res.data);
 
 // 6. 认证用户
 export const  authentication=(params)=>post('/back/user/authentication',params).then(res=>res.data);
@@ -38,6 +40,9 @@ export const  authentication=(params)=>post('/back/user/authentication',params).
 // 6. 认证用户
 export const  generateZXing=(params)=>get('/user/baseInfo/generateZXing',params).then(res=>res.data);
 
+
+//添加活动人员
+export const  userBaseInfoAdd=(params)=>post('/user/baseInfo/add',params).then(res=>res.data);
 
 // 搜索商圈
 export const  searchBusinessDistrict=(params)=>post('/dateBusinessDistrict/searchBusinessDistrict',params).then(res=>res.data);
