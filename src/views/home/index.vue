@@ -368,7 +368,7 @@
             <p class="lineSpan"><span>月薪:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.salary"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.salary}}</span><span class="leftMargin">元</span></p>
             <p class="lineSpan"><span>毕业学校:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.schoolName"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.schoolName}}</span></p>
             <p class="lineSpan"><span>自我介绍:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.selfIntroduction"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.selfIntroduction}}</span></p>
-            <p class="lineSpan"><span>操作人:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.opId"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.opId}}</span></p>
+            <!-- <p class="lineSpan"><span>操作人:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.opId"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.opId}}</span></p> -->
             <p class="lineSpan"><span>个人生活照:</span>
             <template v-show="formAddUserInfo.otherUrls.length>0">
                         <div class="imageList" v-for="(item,index) in formAddUserInfo.otherUrls" :key="index">
@@ -519,7 +519,7 @@ export default {
       that.formAddUserInfo.heartBeatObject=null,
       that.formAddUserInfo.marriedStatus=null,
       that.formAddUserInfo.nativePlace=null,
-      that.formAddUserInfo.opId= null,
+      that.formAddUserInfo.opId= sessionStorage.getItem("userId"),
       that.formAddUserInfo.otherUrls= [],
       that.formAddUserInfo.phone= null,
       that.formAddUserInfo.qq= null,
@@ -536,8 +536,8 @@ export default {
     lookInfo(val){
       // console.log("ws");
       let that = this;
-      that.clearLogoAllitems();
-      that.clearPersonUrlAllitems();
+      // that.clearLogoAllitems();
+      // that.clearPersonUrlAllitems();
       let params = {};
       params.userId = val;
       getUserInfoDetail(params).then(res=>{
@@ -590,10 +590,10 @@ export default {
         that.$message("error", "现居地不能为空");
         return;
       }
-      if(that.formAddUserInfo.opId==null){
-        that.$message("error", "操作员不能为空");
-        return;
-      }
+      // if(that.formAddUserInfo.opId==null){
+      //   that.$message("error", "操作员不能为空");
+      //   return;
+      // }
       if(that.formAddUserInfo.otherUrls.length==0){
         that.$message("error", "个人照片不能为空");
         return;
