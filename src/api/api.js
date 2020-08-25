@@ -32,7 +32,7 @@ export const  getIdentityAuthentication=(params)=>get('/back/user/getIdentityAut
 export const  getEducationBackgroundAuthentication=(params)=>get('/back/user/getEducationBackgroundAuthentication',params).then(res=>res.data);
 
 //6. 查看用户信息
-export const  getUserInfoDetail=(params)=>get('/back/user/baseInfo/getBack',params).then(res=>res.data);
+export const  getUserInfoDetail=(params)=>get('/user/baseInfo/getBack',params).then(res=>res.data);
 
 // 6. 认证用户
 export const  authentication=(params)=>post('/back/user/authentication',params).then(res=>res.data);

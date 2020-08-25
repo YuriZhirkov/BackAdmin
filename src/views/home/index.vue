@@ -322,7 +322,7 @@
       </div>
     </el-dialog>
     <!-- 弹出框  新增用户信息-->
-    <el-dialog title="新增用户信息" :visible.sync="dialogFormVisibleAddUserInfo">
+    <el-dialog :title="AddUserInfoTitle" :visible.sync="dialogFormVisibleAddUserInfo">
       <div class="formWrap">
         <el-form :model="formAddUserInfo" label-position="left">
           <!-- <el-form-item>
@@ -331,6 +331,7 @@
               <img :src="formAddUserInfo.headUrl"  min-width="70" height="70" @error="formAddUserInfo.headUrl=''" v-if="formAddUserInfo.headUrl"/>
             </p>
           </el-form-item> -->
+          <p class="lineSpan"><span>头像:</span>
           <el-form-item label="头像" prop="headUrl">
                     <template v-if="formAddUserInfo.headUrl">
                         <div style="text-align:center">
@@ -340,34 +341,34 @@
                                 :preview-src-list="showLogoUrl">
                             </el-image>
                         </div>
-                        <div class="delImg" @click="formAddUserInfo.headUrl=''"><i class="el-icon-delete"></i></div>
+                        <div class="delImg" v-show="islookDeail==false" @click="formAddUserInfo.headUrl=''"><i class="el-icon-delete"></i></div>
                     </template>
-                    <el-upload v-show="!formAddUserInfo.headUrl" ref="uploadLogoForm" class='upload-demo' :multiple='false' :auto-upload='false' list-type='picture-card' :show-file-list='true'
+                    <el-upload v-show="!formAddUserInfo.headUrl&&islookDeail==false" ref="uploadLogoForm" class='upload-demo' :multiple='false' :auto-upload='false' list-type='picture-card' :show-file-list='true'
                         :before-upload="beforeUpload" :drag='true' action='aaa' :limit="1" :on-exceed="handleLogo"
-                        :on-change="getLogoFileList" :on-remove="clearLogoAllitems"
+                        :on-change="getLogoFileList" :on-remove="getLogoFileList"
                         :http-request="uploadLogo" accept=".jpg,.png,.jpeg" :file-list="logoUrl">
                         <i class="el-icon-upload"></i>
                     </el-upload>      
-                </el-form-item>
-          <el-form-item>   
-            <p class="lineSpan"><span>姓名:</span><span><el-input v-model="formAddUserInfo.realName"></el-input></span></p>
-            <p class="lineSpan"><span>性别:</span><span><el-input v-model="formAddUserInfo.gender"></el-input></span></p>
-            <p class="lineSpan"><span>年龄:</span><span><el-input v-model="formAddUserInfo.age"></el-input></span></p>
-            <p class="lineSpan"><span>体重:</span><span><el-input v-model="formAddUserInfo.weight"></el-input></span><span class="leftMargin">公斤</span></p>
-            <p class="lineSpan"><span>身高:</span><span><el-input v-model="formAddUserInfo.stature"></el-input></span><span class="leftMargin">cm</span></p>
-            <p class="lineSpan"><span>婚姻状态:</span><span><el-input v-model="formAddUserInfo.marriedStatus"></el-input></span></p>
-            <p class="lineSpan"><span>老家所在地:</span><span><el-input v-model="formAddUserInfo.nativePlace"></el-input></span></p>
-            <p class="lineSpan"><span>现居生活地:</span><span><el-input v-model="formAddUserInfo.area" placeholder="XX省 XX市"></el-input></span></p>
-            <p class="lineSpan"><span>学历:</span><span><el-input v-model="formAddUserInfo.educationalBackground"></el-input></span></p>
-            <p class="lineSpan"><span>公司名:</span><span><el-input v-model="formAddUserInfo.company"></el-input></span></p>            
-            <p class="lineSpan"><span>心动对象:</span><span><el-input v-model="formAddUserInfo.heartBeatObject"></el-input></span></p>
-            <p class="lineSpan"><span>微信号:</span><span><el-input v-model="formAddUserInfo.weChat"></el-input></span></p>
-            <p class="lineSpan"><span>qq号:</span><span><el-input v-model="formAddUserInfo.qq"></el-input></span></p>
-            <p class="lineSpan"><span>手机:</span><span><el-input v-model="formAddUserInfo.phone"></el-input></span></p>
-            <p class="lineSpan"><span>月薪:</span><span><el-input v-model="formAddUserInfo.salary"></el-input></span><span class="leftMargin">元</span></p>
-            <p class="lineSpan"><span>毕业学校:</span><span><el-input v-model="formAddUserInfo.schoolName"></el-input></span></p>
-            <p class="lineSpan"><span>自我介绍:</span><span><el-input v-model="formAddUserInfo.selfIntroduction"></el-input></span></p>
-            <p class="lineSpan"><span>操作人:</span><span><el-input v-model="formAddUserInfo.opId"></el-input></span></p>
+            </el-form-item>
+            </p>
+            <p class="lineSpan"><span>姓名:</span><span  v-if="islookDeail==false" ><el-input v-model="formAddUserInfo.realName"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.realName}}</span></p>
+            <p class="lineSpan"><span>性别:</span><span  v-if="islookDeail==false"   ><el-input v-model="formAddUserInfo.gender"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.gender}}</span></p>
+            <p class="lineSpan"><span>年龄:</span><span  v-if="islookDeail==false"      ><el-input v-model="formAddUserInfo.age"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.age}}</span><span class="leftMargin">岁</span></p>
+            <p class="lineSpan"><span>体重:</span><span  v-if="islookDeail==false"   ><el-input v-model="formAddUserInfo.weight"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.weight}}</span><span class="leftMargin">公斤</span></p>
+            <p class="lineSpan"><span>身高:</span><span  v-if="islookDeail==false"  ><el-input v-model="formAddUserInfo.stature"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.stature}}</span><span class="leftMargin">cm</span></p>
+            <p class="lineSpan"><span>婚姻状态:</span><span v-if="islookDeail==false"><el-input  v-model="formAddUserInfo.marriedStatus"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.marriedStatus}}</span></p>
+            <p class="lineSpan"><span>老家所在地:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.nativePlace"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.nativePlace}}</span></p>
+            <p class="lineSpan"><span>现居生活地:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.area" placeholder="XX省 XX市"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.area}}</span></p>
+            <p class="lineSpan"><span>学历:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.educationalBackground"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.educationalBackground}}</span></p>
+            <p class="lineSpan"><span>公司名:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.company"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.company}}</span></p>            
+            <p class="lineSpan"><span>心动对象:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.heartBeatObject"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.heartBeatObject}}</span></p>
+            <p class="lineSpan"><span>微信号:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.weChat"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.weChat}}</span></p>
+            <p class="lineSpan"><span>qq号:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.qq"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.qq}}</span></p>
+            <p class="lineSpan"><span>手机:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.phone"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.phone}}</span></p>
+            <p class="lineSpan"><span>月薪:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.salary"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.salary}}</span><span class="leftMargin">元</span></p>
+            <p class="lineSpan"><span>毕业学校:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.schoolName"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.schoolName}}</span></p>
+            <p class="lineSpan"><span>自我介绍:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.selfIntroduction"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.selfIntroduction}}</span></p>
+            <p class="lineSpan"><span>操作人:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.opId"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.opId}}</span></p>
             <p class="lineSpan"><span>个人生活照:</span>
             <template v-show="formAddUserInfo.otherUrls.length>0">
                         <div class="imageList" v-for="(item,index) in formAddUserInfo.otherUrls" :key="index">
@@ -379,9 +380,9 @@
                             <div class="delImg" @click="delPersonImage(index)"><i class="el-icon-delete"></i></div>
                         </div>
                     </template>
-                    <el-upload v-show="4-formAddUserInfo.otherUrls.length>0" ref="uploadPersonListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
+                    <el-upload v-show="4-formAddUserInfo.otherUrls.length>0&&islookDeail==false" ref="uploadPersonListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
                         :before-upload="beforeUpload" :drag='true' action='aaa' :limit="4-formAddUserInfo.otherUrls.length" :on-exceed="handleLogo"
-                        :on-change="getPersonListUrls" :on-remove="clearPersonUrlAllitems"
+                        :on-change="getPersonListUrls" :on-remove="getPersonListUrls"
                         :http-request="uploadPersonListUrls" accept=".jpg,.png,.jpeg" :file-list="PersonListUrls">
                         <i class="el-icon-upload"></i>
                     </el-upload>
@@ -395,7 +396,7 @@
 
         </el-form>
       </div>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" v-if="islookDeail==false">
         <el-button @click="dialogFormVisibleAddUserInfo = false">取 消</el-button>
         <el-button type="primary" @click="addNewUserInfo()">确 定</el-button>
       </div>
@@ -439,6 +440,8 @@ export default {
       dialogFormVisibleIdentity: false,
       dialogFormVisibleEducationBackground: false,
       dialogFormVisibleAddUserInfo:false,
+      islookDeail:false,
+      AddUserInfoTitle:"",
       flag: null,
       formIdentity: {
         userId: null,
@@ -466,27 +469,27 @@ export default {
         educationalFlag: null
       },
       formAddUserInfo:{
-        age: 12,
-	      area: "湖北省 荆州市",
-	      company: "前哨基地",
-	      educationalBackground: "哈士奇",
-	      gender: "男",
-	      headUrl: "http://ygtqzhang.cn/ygtqpro/20200213022105/3c92bfb918bb405ca28fc5eab86d2fb5.jpeg",
-	      heartBeatObject: "哈士奇",
-	      marriedStatus: "未婚",
-	      nativePlace: "湖北省 荆州市",
-	      opId: "1238766921491542017",
+        age: 0,
+	      area: null,
+	      company: null,
+	      educationalBackground: null,
+	      gender: null,
+	      headUrl: null,
+	      heartBeatObject: null,
+	      marriedStatus: null,
+	      nativePlace: null,
+	      opId: null,
 	      otherUrls: [],
-	      phone: "15818734678",
-	      qq: "2444444422",
-	      realName: "张志饿",
-	      salary: 100,
-	      schoolName: "哈弗",
-	      selfIntroduction: "点对点",
-	      stature: 134,
-	      userId: "",
-	      weChat: "zzzg345",
-	      weight: 12
+	      phone: null,
+	      qq: null,
+	      realName: null,
+	      salary: 0,
+	      schoolName: null,
+	      selfIntroduction: null,
+	      stature: 0,
+	      userId: null,
+	      weChat: null,
+	      weight: 0
       },
       msg: ""
     };
@@ -505,21 +508,116 @@ export default {
     addNewUser(){
       let that=this;
       that.dialogFormVisibleAddUserInfo=true;
+      that.islookDeail=false;
+      that.AddUserInfoTitle="新增用户信息";
+      that.formAddUserInfo.age=0;
+      that.formAddUserInfo.area=null;
+      that.formAddUserInfo.company=null,
+      that.formAddUserInfo.educationalBackground=null,
+      that.formAddUserInfo.gender=null,
+      that.formAddUserInfo.headUrl=null,
+      that.formAddUserInfo.heartBeatObject=null,
+      that.formAddUserInfo.marriedStatus=null,
+      that.formAddUserInfo.nativePlace=null,
+      that.formAddUserInfo.opId= null,
+      that.formAddUserInfo.otherUrls= [],
+      that.formAddUserInfo.phone= null,
+      that.formAddUserInfo.qq= null,
+      that.formAddUserInfo.realName= null,
+      that.formAddUserInfo.salary= 0,
+      that.formAddUserInfo.schoolName= null,
+      that.formAddUserInfo.selfIntroduction= null,
+      that.formAddUserInfo.stature= 0,
+      that.formAddUserInfo.userId= null,
+      that.formAddUserInfo.weChat= null,
+      that.formAddUserInfo.weight= 0
     },
     //查看用户信息
     lookInfo(val){
-      console.log("ws");
+      // console.log("ws");
       let that = this;
+      that.clearLogoAllitems();
+      that.clearPersonUrlAllitems();
       let params = {};
       params.userId = val;
       getUserInfoDetail(params).then(res=>{
-        console.log(res);
+        if(res.errCode==200){
+          that.dialogFormVisibleAddUserInfo=true;
+          that.AddUserInfoTitle="查看用户信息";
+          that.formAddUserInfo=res.data;
+          that.islookDeail=true;
+        }
       })
     },
     //点击新增用户的框的确定
     addNewUserInfo(){
       let that=this;
+     
       let params={};
+      if (that.formAddUserInfo.age==0) {
+        that.$message("error", "年龄不能为空");
+        return;
+      }
+      if (that.formAddUserInfo.area==null) {
+        that.$message("error", "老家所在地不能为空");
+        return;
+      }
+      if (that.formAddUserInfo.company==null) {
+        that.$message("error", "公司不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.educationalBackground==null){
+        that.$message("error", "教育背景不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.gender==null){
+        that.$message("error", "性别不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.headUrl==null){
+        that.$message("error", "头像不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.heartBeatObject==null){
+        that.$message("error", "心动对象不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.marriedStatus==null){
+        that.$message("error", "婚姻状态不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.nativePlace==null){
+        that.$message("error", "现居地不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.opId==null){
+        that.$message("error", "操作员不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.otherUrls.length==0){
+        that.$message("error", "个人照片不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.phone==null){
+        that.$message("error", "手机不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.qq==null){
+        that.$message("error", "QQ不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.realName==null){
+        that.$message("error", "姓名不能为空");
+        return;
+      }
+       if(that.formAddUserInfo.salary==null){
+        that.$message("error", "薪水不能为空");
+        return;
+      }
+      if(that.formAddUserInfo.weight==null){
+        that.$message("error", "体重不能为空");
+        return;
+      }
       params=that.formAddUserInfo;
       userBaseInfoAdd(params).then(res=>{
             console.log(res);
@@ -542,27 +640,28 @@ export default {
       },
       //获取头像照片
       getLogoFileList(file, fileList){
-        console.log("ces",file,fileList);
-          this.formAddUserInfo.headUrl = fileList.url;
+        // console.log("ces",file,fileList);
+          this.formAddUserInfo.headUrl = fileList;
       },
       //获取生活照片
       getPersonListUrls(file, fileList){
+          // console.log("ces",file,fileList);
           this.formAddUserInfo.otherUrls = fileList
       },
       delPersonImage(index){
              this.formAddUserInfo.otherUrls.splice(index,1);
-        },
-        clearLogoAllitems(){
-            this.formAddUserInfo.headUrl = "";
-            this.$refs.uploadLogoForm.clearFiles();
-            this.$refs.uploadLogoForm.value="";
-        },
-        clearPersonUrlAllitems(){
-            this.formAddUserInfo.otherUrls = []
-            this.$refs.uploadPersonListUrlsForm.clearFiles()
-            this.$refs.uploadPersonListUrlsForm.value=""
-        },
-        uploadLogo(){
+      },
+      clearLogoAllitems(){
+          this.formAddUserInfo.headUrl = "";
+          this.$refs.uploadLogoForm.clearFiles();
+          this.$refs.uploadLogoForm.value="";
+      },
+      clearPersonUrlAllitems(){
+          this.formAddUserInfo.otherUrls = []
+          this.$refs.uploadPersonListUrlsForm.clearFiles()
+          this.$refs.uploadPersonListUrlsForm.value=""
+      },
+      uploadLogo(){
             if(this.logoUrl.length==0){
                 return ''
             }
