@@ -74,32 +74,28 @@
     <el-row :gutter="40" class="userListRow"> 
       <span class="userList">用户列表</span>
     </el-row>
-    <el-row :gutter="40"> 
-      <span class="userNumSpan">用户编号:</span><input id="userNum" class="userNumInput" type="text" v-model="userNumInput"/>
-      <span class="userNumSpan">昵称:</span><input id = "nickName" class="userNumInput" type="text" v-model="nickName"/>
-      <span class="userNumSpan">性别:</span>
-      <select class="userNumInput" id = "gender" v-model="gender">
-           <option value="1" selected>请选择..</option>
-           <option value="男">男</option>
-           <option value="女">女</option>
-      </select>
-      <span class="userNumSpan">居住地:</span><input id = "area" class="userNumInput" type="text" v-model="area"/>
-      <span class="userNumSpan">教育背景:</span><input id = "educationalBackground" class="userNumInput" type="text" v-model="educationalBackground"/>
+    <el-row :gutter="20"> 
+      <el-col :span="3"><el-input placeholder="用户编号" type="text" v-model="userNumInput"/></el-col>
+      <el-col :span="3"><el-input placeholder="昵称" type="text" v-model="nickName"/></el-col>
+      <el-col :span="3"><el-select v-model="gender" placeholder="性别">
+           <el-option value="男">男</el-option>
+           <el-option value="女">女</el-option>
+      </el-select></el-col>
+      <el-col :span="3"><el-input type="text" v-model="area" placeholder="居住地"/></el-col>
+      <el-col :span="3"><el-input placeholder="教育背景" type="text" v-model="educationalBackground"/></el-col>
+      <el-col :span="3"><el-input type="text" placeholder="最小年纪" v-model="minAge"/></el-col>
+      <el-col :span="3"><el-input type="text" placeholder="最大年纪" v-model="maxAge"/></el-col>
     </el-row>
-
-   
-    <el-row :gutter="40">
-        <span class="userNumSpan">年纪:</span><input id = "minAge" class="userNumInput" type="text" placeholder="最小年纪" v-model="minAge"/><span style="font-size:20px;float: left;">---</span>
-        <input id = "maxAge" class="userNumInput" type="text" placeholder="最大年纪" v-model="maxAge"/>
-        <span class="maxSalarySpan">月薪:</span><input id = "minSalary" class="userNumInput" type="text" placeholder="最小月薪" v-model="minSalary"/><span style="font-size:20px;float: left;">---</span>
-        <input id = "maxSalary" class="userNumInput" type="text" placeholder="最大月薪" v-model="maxSalary"/>
-        <span class="maxSalarySpan">身高:</span><input id = "minStature" class="userNumInput" type="text" placeholder="最小身高" v-model="minStature"/><span style="font-size:20px;float: left;">---</span>
-        <input id = "maxStature" class="userNumInput" type="text" placeholder="最大身高" v-model="maxStature"/>
-    </el-row>
-    <el-row :gutter="40" >
-        <el-button type="primary" size="small" class="chaXunButton" @click="searchUserInfo">查询</el-button>
-        <el-button type="primary" size="small" class="chaXunButton" @click="reset">重置</el-button>
-        <el-button type="primary" size="small" class="chaXunButton" @click="addNewUser">新增用户</el-button>
+    <el-row :gutter="20">
+        <el-col :span="3"><el-input type="text" placeholder="最小月薪" v-model="minSalary"/></el-col>
+        <el-col :span="3"><el-input type="text" placeholder="最大月薪" v-model="maxSalary"/></el-col>
+        <el-col :span="3"> <el-input type="text" placeholder="最小身高" v-model="minStature"/></el-col>
+        <el-col :span="3"><el-input type="text" placeholder="最大身高" v-model="maxStature"/></el-col>
+        <el-col :span="10">
+          <el-button type="primary" size="small" @click="searchUserInfo">查询</el-button>
+          <el-button type="primary" size="small" @click="reset">重置</el-button>
+          <el-button type="primary" size="small" @click="addNewUser">新增用户</el-button>
+        </el-col>
     </el-row>
     <el-row :gutter="40">
         <el-table
@@ -166,12 +162,12 @@
           label="教育背景"
           width="80">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           align='center'
           prop="userId"
           label="id"
           width="180">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           align='center'
           prop="checkTime"
@@ -210,8 +206,21 @@
                   <el-button type="primary" size="small"
                       @click="lookInfo(scope.row.userId)">查看
                 </el-button>
-            </template>         
+               
+            </template>   
+               
         </el-table-column>
+
+        <el-table-column prop="look" label="删除" min-width="120%" align='center'>
+            <template   slot-scope="scope">            
+                  <el-button type="primary" size="small"
+                      @click="deleteUserId(scope.row.userId)">删除
+                </el-button>
+               
+            </template>   
+               
+        </el-table-column>
+
       </el-table>
     </el-row>
     <el-row :gutter="40" class="userListPagination">
@@ -321,89 +330,129 @@
         <el-button type="primary" @click="authentication(2)">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 弹出框  新增用户信息-->
     <el-dialog :title="AddUserInfoTitle" :visible.sync="dialogFormVisibleAddUserInfo">
-      <div class="formWrap">
-        <el-form :model="formAddUserInfo" label-position="left">
-          <!-- <el-form-item>
-            <p class="lineSpan">
-              <span>头像:</span>
-              <img :src="formAddUserInfo.headUrl"  min-width="70" height="70" @error="formAddUserInfo.headUrl=''" v-if="formAddUserInfo.headUrl"/>
-            </p>
-          </el-form-item> -->
-          <p class="lineSpan"><span>头像:</span>
-          <el-form-item label="头像" prop="headUrl">
-                    <template v-if="formAddUserInfo.headUrl">
-                        <div style="text-align:center">
-                            <el-image class="logoPanel"
-                               style="width: 150px; height: 150px"
-                                :src="formAddUserInfo.headUrl" 
-                                :preview-src-list="showLogoUrl">
-                            </el-image>
-                        </div>
-                        <div class="delImg" v-show="islookDeail==false" @click="formAddUserInfo.headUrl=''"><i class="el-icon-delete"></i></div>
-                    </template>
-                    <el-upload v-show="!formAddUserInfo.headUrl&&islookDeail==false" ref="uploadLogoForm" class='upload-demo' :multiple='false' :auto-upload='false' list-type='picture-card' :show-file-list='true'
-                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="1" :on-exceed="handleLogo"
-                        :on-change="getLogoFileList" :on-remove="getLogoFileList"
-                        :http-request="uploadLogo" accept=".jpg,.png,.jpeg" :file-list="logoUrl">
-                        <i class="el-icon-upload"></i>
-                    </el-upload>      
-            </el-form-item>
-            </p>
-            <p class="lineSpan"><span>姓名:</span><span  v-if="islookDeail==false" ><el-input v-model="formAddUserInfo.realName"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.realName}}</span></p>
-            <p class="lineSpan"><span>性别:</span><span  v-if="islookDeail==false"   ><el-input v-model="formAddUserInfo.gender"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.gender}}</span></p>
-            <p class="lineSpan"><span>年龄:</span><span  v-if="islookDeail==false"      ><el-input v-model="formAddUserInfo.age"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.age}}</span><span class="leftMargin">岁</span></p>
-            <p class="lineSpan"><span>体重:</span><span  v-if="islookDeail==false"   ><el-input v-model="formAddUserInfo.weight"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.weight}}</span><span class="leftMargin">公斤</span></p>
-            <p class="lineSpan"><span>身高:</span><span  v-if="islookDeail==false"  ><el-input v-model="formAddUserInfo.stature"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.stature}}</span><span class="leftMargin">cm</span></p>
-            <p class="lineSpan"><span>婚姻状态:</span><span v-if="islookDeail==false"><el-input  v-model="formAddUserInfo.marriedStatus"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.marriedStatus}}</span></p>
-            <p class="lineSpan"><span>老家所在地:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.nativePlace"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.nativePlace}}</span></p>
-            <p class="lineSpan"><span>现居生活地:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.area" placeholder="XX省 XX市"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.area}}</span></p>
-            <p class="lineSpan"><span>学历:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.educationalBackground"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.educationalBackground}}</span></p>
-            <p class="lineSpan"><span>公司名:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.company"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.company}}</span></p>            
-            <p class="lineSpan"><span>心动对象:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.heartBeatObject"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.heartBeatObject}}</span></p>
-            <p class="lineSpan"><span>微信号:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.weChat"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.weChat}}</span></p>
-            <p class="lineSpan"><span>qq号:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.qq"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.qq}}</span></p>
-            <p class="lineSpan"><span>手机:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.phone"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.phone}}</span></p>
-            <p class="lineSpan"><span>月薪:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.salary"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.salary}}</span><span class="leftMargin">元</span></p>
-            <p class="lineSpan"><span>毕业学校:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.schoolName"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.schoolName}}</span></p>
-            <p class="lineSpan"><span>自我介绍:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.selfIntroduction"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.selfIntroduction}}</span></p>
-            <!-- <p class="lineSpan"><span>操作人:</span><span v-if="islookDeail==false"><el-input v-model="formAddUserInfo.opId"></el-input></span><span v-if="islookDeail==true">{{formAddUserInfo.opId}}</span></p> -->
-            <p class="lineSpan"><span>个人生活照:</span>
+      <div v-loading="editUserLoading">
+      <el-form ref="editUserForm" label-position="right" label-width="100px" :rules="editUserRules" :model="formAddUserInfo">
+        <el-form-item label="头像" prop="headUrl">
+          <template v-if="formAddUserInfo.headUrl">
+            <div class="imageList">
+              <el-image class="logoPanel"
+                style="width: 150px; height: 150px"
+                :src="formAddUserInfo.headUrl" 
+                :preview-src-list="showLogoUrl">
+              </el-image>
+            </div>
+            <div class="delImg" @click="formAddUserInfo.headUrl=''"><i class="el-icon-delete"></i></div>
+          </template>
+          <el-upload v-show="!formAddUserInfo.headUrl" ref="uploadLogoForm" class='upload-demo' :multiple='false' :auto-upload='false' list-type='picture-card' :show-file-list='true'
+            :before-upload="beforeUpload" :drag='true' action='aaa' :limit="1" :on-exceed="handleLogo1"
+            :on-change="getLogoFileList" :on-remove="getLogoFileList"
+            :http-request="uploadLogo" accept=".jpg,.png,.jpeg" :file-list="headUrlTemp">
+            <i class="el-icon-upload"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="姓名" prop="realName">
+          <el-input v-model="formAddUserInfo.realName"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" prop="gender">
+          <el-select v-model="formAddUserInfo.gender" placeholder="性别">
+            <el-option value="男">男</el-option>
+            <el-option value="女">女</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="年龄" prop="age">
+          <el-input placeholder="年龄" v-model="formAddUserInfo.age">
+            <template slot="append">岁</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="体重" prop="weight">
+          <el-input placeholder="体重" v-model="formAddUserInfo.weight">
+            <template slot="append">公斤</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="身高" prop="stature">
+          <el-input placeholder="身高" v-model="formAddUserInfo.stature">
+            <template slot="append">cm</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="婚姻状态" prop="marriedStatus">
+          <el-select v-model="formAddUserInfo.marriedStatus" placeholder="婚姻状态">
+            <el-option value="未婚">未婚</el-option>
+            <el-option value="已婚">已婚</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="老家所在地" prop="nativePlaceTemp">
+          <el-cascader
+          v-model="nativePlaceTemp"
+          :options="provinceCityData"
+          @change="handleChangeNativePlace">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="现居生活地" prop="areaTemp">
+          <el-cascader
+          v-model="areaTemp"
+          :options="provinceCityData"
+          @change="handleChangeArea">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="学历" prop="educationalBackground">
+          <el-input v-model="formAddUserInfo.educationalBackground"></el-input>
+        </el-form-item>
+        <el-form-item label="公司名" prop="company">
+          <el-input v-model="formAddUserInfo.company"></el-input>
+        </el-form-item>
+        <el-form-item label="心动对象" prop="heartBeatObject">
+          <el-input type="textarea" :rows="5" v-model="formAddUserInfo.heartBeatObject"></el-input>
+        </el-form-item>
+        <el-form-item label="微信号" prop="weChat">
+          <el-input v-model="formAddUserInfo.weChat"></el-input>
+        </el-form-item>
+        <el-form-item label="qq号" prop="qq">
+          <el-input v-model="formAddUserInfo.qq"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="phone">
+          <el-input v-model="formAddUserInfo.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="月薪" prop="salary">
+          <el-input placeholder="月薪" v-model="formAddUserInfo.salary">
+            <template slot="append">元</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="毕业学校" prop="schoolName">
+          <el-input v-model="formAddUserInfo.schoolName"></el-input>
+        </el-form-item>
+        <el-form-item label="自我介绍" prop="selfIntroduction">
+          <el-input type="textarea" :rows="5" v-model="formAddUserInfo.selfIntroduction"></el-input>
+        </el-form-item>
+        <el-form-item label="个人生活照" prop="otherUrls">
             <template v-show="formAddUserInfo.otherUrls.length>0">
-                        <div class="imageList" v-for="(item,index) in formAddUserInfo.otherUrls" :key="index">
-                            <el-image 
-                               style="width: 100px; height: 100px"
-                                :src="item" 
-                                :preview-src-list="formAddUserInfo.otherUrls">
-                            </el-image>
-                            <div class="delImg" @click="delPersonImage(index)"><i class="el-icon-delete"></i></div>
-                        </div>
-                    </template>
-                    <el-upload v-show="4-formAddUserInfo.otherUrls.length>0&&islookDeail==false" ref="uploadPersonListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
-                        :before-upload="beforeUpload" :drag='true' action='aaa' :limit="4-formAddUserInfo.otherUrls.length" :on-exceed="handleLogo"
-                        :on-change="getPersonListUrls" :on-remove="getPersonListUrls"
-                        :http-request="uploadPersonListUrls" accept=".jpg,.png,.jpeg" :file-list="PersonListUrls">
-                        <i class="el-icon-upload"></i>
-                    </el-upload>
-            </p>
-
-          </el-form-item>
-          <!-- <el-form-item>
-                    
-                      
-            </el-form-item> -->
-
-        </el-form>
-      </div>
-      <div slot="footer" class="dialog-footer" v-if="islookDeail==false">
+               <div class="imageList" v-for="(item,index) in formAddUserInfo.otherUrls" :key="index">
+                  <el-image 
+                    style="width: 150px; height: 150px"
+                    :src="item" 
+                    :preview-src-list="formAddUserInfo.otherUrls">
+                  </el-image>
+                  <div class="delImg" @click="delPersonImage(index)"><i class="el-icon-delete"></i></div>
+              </div>
+          </template>
+            <el-upload v-show="4-formAddUserInfo.otherUrls.length>0" ref="uploadPersonListUrlsForm" class='image-uploader' :multiple='true' :auto-upload='false' list-type='picture-card' :show-file-list='true'
+                :before-upload="beforeUpload" :drag='true' action='aaa' :limit="4-formAddUserInfo.otherUrls.length" :on-exceed="handleLogo"
+                :on-change="getPersonListUrls" :on-remove="getPersonListUrls"
+                :http-request="uploadPersonListUrls" accept=".jpg,.png,.jpeg" :file-list="otherUrlsTemp">
+                <i class="el-icon-upload"></i>
+            </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleAddUserInfo = false">取 消</el-button>
         <el-button type="primary" @click="addNewUserInfo()">确 定</el-button>
+      </div>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import { provinceAndCityData, CodeToText ,TextToCode} from 'element-china-area-data'
 import {
   userStatistics,
   baseInfoZXing,
@@ -412,9 +461,11 @@ import {
   getEducationBackgroundAuthentication,
   generateZXing,
   userBaseInfoAdd,
-  getUserInfoDetail
+  getUserInfoDetail,
+  deleteUserId
 } from "@api";
 import { exists } from "fs";
+import { log } from 'util';
 export default {
   name: "home",
   data() {
@@ -440,7 +491,6 @@ export default {
       dialogFormVisibleIdentity: false,
       dialogFormVisibleEducationBackground: false,
       dialogFormVisibleAddUserInfo:false,
-      islookDeail:false,
       AddUserInfoTitle:"",
       flag: null,
       formIdentity: {
@@ -468,6 +518,11 @@ export default {
         schoolName: null,
         educationalFlag: null
       },
+      headUrlTemp:[],//头像
+      otherUrlsTemp:[],//生活照
+      nativePlaceTemp:[],//老家所在地
+      areaTemp:[],//现居生活地
+      editUserLoading:false,
       formAddUserInfo:{
         age: 0,
 	      area: null,
@@ -491,11 +546,16 @@ export default {
 	      weChat: null,
 	      weight: 0
       },
+      editUserRules:{
+
+      },
+      provinceCityData:[],
       msg: ""
     };
   },
   mounted() {
     let that = this;
+    this.provinceCityData = provinceAndCityData
     that.statistics();
     that.baseInfoZXing();
   },
@@ -506,199 +566,286 @@ export default {
     
     //新增用户
     addNewUser(){
-      let that=this;
-      that.dialogFormVisibleAddUserInfo=true;
-      that.islookDeail=false;
-      that.AddUserInfoTitle="新增用户信息";
-      that.formAddUserInfo.age=0;
-      that.formAddUserInfo.area=null;
-      that.formAddUserInfo.company=null,
-      that.formAddUserInfo.educationalBackground=null,
-      that.formAddUserInfo.gender=null,
-      that.formAddUserInfo.headUrl=null,
-      that.formAddUserInfo.heartBeatObject=null,
-      that.formAddUserInfo.marriedStatus=null,
-      that.formAddUserInfo.nativePlace=null,
-      that.formAddUserInfo.opId= sessionStorage.getItem("userId"),
-      that.formAddUserInfo.otherUrls= [],
-      that.formAddUserInfo.phone= null,
-      that.formAddUserInfo.qq= null,
-      that.formAddUserInfo.realName= null,
-      that.formAddUserInfo.salary= 0,
-      that.formAddUserInfo.schoolName= null,
-      that.formAddUserInfo.selfIntroduction= null,
-      that.formAddUserInfo.stature= 0,
-      that.formAddUserInfo.userId= null,
-      that.formAddUserInfo.weChat= null,
-      that.formAddUserInfo.weight= 0
+      this.dialogFormVisibleAddUserInfo=true;
+      this.AddUserInfoTitle="新增用户信息";
+      this.formAddUserInfo.age=0;
+      this.formAddUserInfo.area=null;
+      this.formAddUserInfo.company=null,
+      this.formAddUserInfo.educationalBackground=null,
+      this.formAddUserInfo.gender=null,
+      this.formAddUserInfo.headUrl=null,
+      this.formAddUserInfo.heartBeatObject=null,
+      this.formAddUserInfo.marriedStatus=null,
+      this.formAddUserInfo.nativePlace=null,
+      this.formAddUserInfo.opId= sessionStorage.getItem("userId"),
+      this.formAddUserInfo.otherUrls= [],
+      this.formAddUserInfo.phone= null,
+      this.formAddUserInfo.qq= null,
+      this.formAddUserInfo.realName= null,
+      this.formAddUserInfo.salary= 0,
+      this.formAddUserInfo.schoolName= null,
+      this.formAddUserInfo.selfIntroduction= null,
+      this.formAddUserInfo.stature= 0,
+      this.formAddUserInfo.userId= null,
+      this.formAddUserInfo.weChat= null,
+      this.formAddUserInfo.weight= 0
+      this.headUrlTemp = []
+      this.otherUrlsTemp = []
+      this.nativePlaceTemp = []
+      this.areaTemp = []
     },
     //查看用户信息
     lookInfo(val){
-      // console.log("ws");
-      let that = this;
-      // that.clearLogoAllitems();
-      // that.clearPersonUrlAllitems();
+      this.headUrlTemp = []
+      this.otherUrlsTemp = []
       let params = {};
       params.userId = val;
+      this.AddUserInfoTitle="编辑用户信息";
       getUserInfoDetail(params).then(res=>{
         if(res.errCode==200){
-          that.dialogFormVisibleAddUserInfo=true;
-          that.AddUserInfoTitle="查看用户信息";
-          that.formAddUserInfo=res.data;
-          that.islookDeail=true;
+          this.dialogFormVisibleAddUserInfo = true;
+          this.AddUserInfoTitle="查看用户信息";
+          this.formAddUserInfo=res.data;
+          this.formAddUserInfo.opId= sessionStorage.getItem("userId");
+          this.getNativePlaceCode()
+          this.getAreaCode()
         }
       })
     },
+
+    deleteUserId(val){
+      console.log("看看",val);
+       let that = this;
+       //删除用户
+      this.headUrlTemp = []
+      this.otherUrlsTemp = []
+      let params = {};
+      params.userId = val;
+      this.AddUserInfoTitle="删除用户信息";
+      deleteUserId(params).then(res=>{
+        if(res.errCode==200){
+          that.baseInfoZXing();
+        }
+      })
+
+       
+
+    },
+    getNativePlaceCode(){
+      this.nativePlaceTemp = []
+      let nativePlaceList = []
+      if(this.formAddUserInfo.nativePlace){
+        nativePlaceList = this.formAddUserInfo.nativePlace.split(",")
+      }
+      if(nativePlaceList.length>=2){
+        let province = TextToCode[nativePlaceList[0]].code
+        let city = TextToCode[nativePlaceList[0]][nativePlaceList[1]].code
+        if(province && city){
+          this.nativePlaceTemp = [province,city]
+        }
+      }else{
+        this.formAddUserInfo.nativePlace = ''
+      }
+    },
+    getAreaCode(){
+      this.areaTemp = []
+      let areaList = []
+      if(this.formAddUserInfo.area){
+        areaList = this.formAddUserInfo.area.split(",")
+      }
+      if(areaList.length>=2){
+        let province = TextToCode[areaList[0]].code
+        let city = TextToCode[areaList[0]][areaList[1]].code
+        if(province && city){
+          this.areaTemp = [province,city]
+        }
+      }else{
+        this.formAddUserInfo.area = ''
+      }
+    },
+    handleChangeNativePlace(){
+      let province = CodeToText[this.nativePlaceTemp[0]]
+      let city = CodeToText[this.nativePlaceTemp[1]]
+      this.formAddUserInfo.nativePlace = province+","+city
+    },
+    handleChangeArea(){
+      let province = CodeToText[this.areaTemp[0]]
+      let city = CodeToText[this.areaTemp[1]]
+      this.formAddUserInfo.area = province+","+city
+    },
     //点击新增用户的框的确定
     addNewUserInfo(){
-      let that=this;
-     
       let params={};
-      if (that.formAddUserInfo.age==0) {
-        that.$message("error", "年龄不能为空");
+      if (this.formAddUserInfo.age==0) {
+        this.$message("error", "年龄不能为空");
         return;
       }
-      if (that.formAddUserInfo.area==null) {
-        that.$message("error", "老家所在地不能为空");
+      if (this.formAddUserInfo.area==null) {
+        this.$message("error", "居住地不能为空");
         return;
       }
-      if (that.formAddUserInfo.company==null) {
-        that.$message("error", "公司不能为空");
+    
+      if(this.formAddUserInfo.educationalBackground==null){
+        this.$message("error", "教育背景不能为空");
         return;
       }
-      if(that.formAddUserInfo.educationalBackground==null){
-        that.$message("error", "教育背景不能为空");
+      if(this.formAddUserInfo.gender==null){
+        this.$message("error", "性别不能为空");
         return;
       }
-      if(that.formAddUserInfo.gender==null){
-        that.$message("error", "性别不能为空");
+      if(this.formAddUserInfo.headUrl==null){
+        this.$message("error", "头像不能为空");
+        return;
+      } 
+    
+      if(this.formAddUserInfo.marriedStatus==null){
+        this.$message("error", "婚姻状态不能为空");
         return;
       }
-      if(that.formAddUserInfo.headUrl==null){
-        that.$message("error", "头像不能为空");
+      if(this.formAddUserInfo.nativePlace==null){
+        this.$message("error", "老家不能为空");
         return;
       }
-      if(that.formAddUserInfo.heartBeatObject==null){
-        that.$message("error", "心动对象不能为空");
+      if(this.formAddUserInfo.opId==null){
+        this.$message("error", "操作员不能为空");
         return;
       }
-      if(that.formAddUserInfo.marriedStatus==null){
-        that.$message("error", "婚姻状态不能为空");
+     
+      if(this.formAddUserInfo.phone==null){
+        this.$message("error", "手机不能为空");
         return;
       }
-      if(that.formAddUserInfo.nativePlace==null){
-        that.$message("error", "现居地不能为空");
+      
+      if(this.formAddUserInfo.realName==null){
+        this.$message("error", "姓名不能为空");
         return;
       }
-      // if(that.formAddUserInfo.opId==null){
-      //   that.$message("error", "操作员不能为空");
-      //   return;
-      // }
-      if(that.formAddUserInfo.otherUrls.length==0){
-        that.$message("error", "个人照片不能为空");
+
+      if(this.formAddUserInfo.stature==0){
+        this.$message("error", "身高不能为空");
         return;
       }
-      if(that.formAddUserInfo.phone==null){
-        that.$message("error", "手机不能为空");
+     
+
+      if(this.formAddUserInfo.weChat==null){
+        this.$message("error", "微信不能为空");
         return;
       }
-      if(that.formAddUserInfo.qq==null){
-        that.$message("error", "QQ不能为空");
-        return;
+      
+      if(!this.formAddUserInfo.headUrl && this.headUrlTemp.length==0){
+          this.$message("warning","必须上传头像")
+          return
       }
-      if(that.formAddUserInfo.realName==null){
-        that.$message("error", "姓名不能为空");
-        return;
-      }
-       if(that.formAddUserInfo.salary==null){
-        that.$message("error", "薪水不能为空");
-        return;
-      }
-      if(that.formAddUserInfo.weight==null){
-        that.$message("error", "体重不能为空");
-        return;
-      }
-      params=that.formAddUserInfo;
-      userBaseInfoAdd(params).then(res=>{
-            console.log(res);
+     
+      params=this.formAddUserInfo;
+      this.editUserLoading = true
+      this.formAddUserInfo.opId= sessionStorage.getItem("userId")
+      const a = this.uploadLogo()
+      const b = this.uploadPersonListUrls()
+      const c = Promise.all([a, b])
+      let that = this
+      c.then(function(val) {
+        if(val[0]){
+          params.headUrl = val[0]
+        }
+        params.otherUrls = params.otherUrls.concat(val[1])
+        userBaseInfoAdd(params).then(res=>{
+          that.editUserLoading = false
+          if(res.errCode==200){
+            that.dialogFormVisibleAddUserInfo = false
+            that.$message('success','操作成功')
+            that.baseInfoZXing();
+          }else{
+            that.$message('error',res.errMsg)
+          }
+        })
+
       })
-    },
-     // 上传文件个数超过定义的数量
-    handleLogo(files, fileList) {
-            this.$message({
-                 message: '当前限制选择 4 个文件，请删除后继续上传',
-                 type: 'error'
-            });
-    },
+      //更新列表数据
+      
+    },// 上传文件个数超过定义的数量
+      handleLogo1(files, fileList) {
+        this.$message({
+              message: '当前限制选择 1 个文件，请删除后继续上传',
+              type: 'error'
+        });
+      },
+      // 上传文件个数超过定义的数量
+      handleLogo(files, fileList) {
+        this.$message({
+              message: '当前限制选择 4 个文件，请删除后继续上传',
+              type: 'error'
+        });
+      },
     // 上传文件之前的钩子
       beforeUpload(file) {
-          //判断文件格式
-          let name = file.name
-          if (name.indexOf("png")<-1 && name.indexOf("jpg")<-1 && name.indexOf("jpeg")<-1) {
-              return false;
-          }
+        //判断文件格式
+        let name = file.name
+        if (name.indexOf("png")<-1 && name.indexOf("jpg")<-1 && name.indexOf("jpeg")<-1) {
+            return false;
+        }
       },
       //获取头像照片
       getLogoFileList(file, fileList){
         // console.log("ces",file,fileList);
-          this.formAddUserInfo.headUrl = fileList;
+          this.headUrlTemp = fileList;
       },
       //获取生活照片
       getPersonListUrls(file, fileList){
           // console.log("ces",file,fileList);
-          this.formAddUserInfo.otherUrls = fileList
+          this.otherUrlsTemp = fileList
       },
       delPersonImage(index){
-             this.formAddUserInfo.otherUrls.splice(index,1);
+        this.formAddUserInfo.otherUrls.splice(index,1);
       },
       clearLogoAllitems(){
-          this.formAddUserInfo.headUrl = "";
-          this.$refs.uploadLogoForm.clearFiles();
-          this.$refs.uploadLogoForm.value="";
+        this.headUrlTemp = "";
+        this.$refs.uploadLogoForm.clearFiles();
+        this.$refs.uploadLogoForm.value="";
       },
       clearPersonUrlAllitems(){
-          this.formAddUserInfo.otherUrls = []
-          this.$refs.uploadPersonListUrlsForm.clearFiles()
-          this.$refs.uploadPersonListUrlsForm.value=""
+        this.otherUrlsTemp = []
+        this.$refs.uploadPersonListUrlsForm.clearFiles()
+        this.$refs.uploadPersonListUrlsForm.value=""
       },
       uploadLogo(){
-            if(this.logoUrl.length==0){
-                return ''
-            }
-            let that = this
-            return new Promise(function(resolve) {
-                let file = that.formAddUserInfo.headUrl[0].raw
-                const form = new FormData()// FormData 对象
-                form.append('file', file)
-                let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/upload"
-                axios({
-                    url: uploadUrl,
-                    data: form,
-                    method: 'post',
-                    // headers: {'x-auth-token': getToken()},
-                    contentType: "multipart/form-data",
-                    processData: false, //告诉jquery不要对form进行处理
-                    contentType: false, //指定为false才能形成正确的Content-Type
-                    async: false
-                }).then(res=>{
-                    if(res.data.errCode==200){
-                        resolve(res.data.data)
-                    }else{
-                        this.pageLoading = false
-                        that.$message("error","头像上传失败，请仔细核对数据以及格式！")
-                        return ;
-                    }
-                })
+        if(this.headUrlTemp.length==0){
+            return ''
+        }
+        let that = this
+        return new Promise(function(resolve) {
+            let file = that.headUrlTemp[0].raw
+            const form = new FormData()// FormData 对象
+            form.append('file', file)
+            let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/upload"
+            axios({
+                url: uploadUrl,
+                data: form,
+                method: 'post',
+                // headers: {'x-auth-token': getToken()},
+                contentType: "multipart/form-data",
+                processData: false, //告诉jquery不要对form进行处理
+                contentType: false, //指定为false才能形成正确的Content-Type
+                async: false
+            }).then(res=>{
+                if(res.data.errCode==200){
+                    resolve(res.data.data)
+                }else{
+                    this.pageLoading = false
+                    that.$message("error","头像上传失败，请仔细核对数据以及格式！")
+                    return ;
+                }
             })
+        })
         },
         uploadPersonListUrls(){
-            if(this.formAddUserInfo.otherUrls.length==0){
+            if(this.otherUrlsTemp.length==0){
                 return []
             }
             let that = this
             return new Promise(function(resolve) {
                 const form = new FormData()// FormData 对象
-                that.formAddUserInfo.otherUrls.forEach(item=>{
+                that.otherUrlsTemp.forEach(item=>{
                     form.append('files', item.raw)
                 })
                 let uploadUrl = process.env.VUE_APP_LOGOUT_URL + "/file/uploadBatch"
@@ -943,6 +1090,67 @@ export default {
   }
   .userListPagination {
     margin-top: 20px;
+  }
+  .el-row{
+    margin-bottom:10px;
+  }
+  .el-col{
+    text-align: left;
+  }
+  /deep/.el-form-item__label{
+    color:black !important;
+  }
+  /deep/.el-form-item__content{
+    text-align: left;
+  }
+  .el-select{
+    width:100%!important;
+  }
+  .el-cascader{
+    width:100% !important;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  /deep/.el-upload-dragger{
+    width:150px;
+    height:150px;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .delImg{
+      width: 150px;
+      height: 30px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 30px;
+      font-size: 14px;
+      background-color: gray;
+      opacity: 0.5;
+      color: black;
+      margin-top:-15px;
+      cursor: pointer;
+  }
+  .imageList{
+      display: inline-block;
   }
   .userListRow {
     margin-bottom: 20px;

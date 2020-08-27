@@ -76,3 +76,8 @@ export const getBasicInfoActivity=(params)=>get('activity/getBasicInfo',params).
 
 export const deteleActivity=(params)=>post('activity/delete',params).then(res=>res.data);
 
+
+//删除用户
+export const  deleteUserId=(params)=>get('/user/baseInfo/deleteUserId',params).then(res=>res.data);
+
+
